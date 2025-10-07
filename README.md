@@ -24,11 +24,11 @@
 
 Status available：:heavy_check_mark: (Completed) | :hourglass_flowing_sand: (Working) | :no_entry: (Not Started) | :orange_book: (Finish reading)
 
-| No.  |        Chapter Title        |          Status          |
-| :--: | :-------------------------: | :----------------------: |
-| Ch01 | [Chapter Title1](./Ch01.md) |    :heavy_check_mark:    |
-| Ch02 | [Chapter Title2](./Ch02.md) | :hourglass_flowing_sand: |
-| Ch03 | [Chapter Title3](./Ch03.md) |        :no_entry:        |
+| No.  |                        Chapter Title                         |          Status          |
+| :--: | :----------------------------------------------------------: | :----------------------: |
+| Ch01 |     [JUnit jump-start](./notes/Ch01_JUnit_jumpstart.md)      |    :heavy_check_mark:    |
+| Ch02 | [Exploring core JUnit](./notes/Ch02_exploring_core_JUnit.md) | :hourglass_flowing_sand: |
+| Ch03 |   [JUnit architecture](./notes/Ch03_JUnit_architecture.md)   |        :no_entry:        |
 
 
 
