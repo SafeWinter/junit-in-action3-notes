@@ -14,9 +14,15 @@
 
 > **Introduction**
 >
-> Redis is considered the world's most popular key-value store database. Its versatility and the wide variety of use cases it enables have made it a popular choice of database for many enterprises. Based on the latest version of Redis, this book provides both step-by-step recipes and relevant the background information required to utilize its features to the fullest. It covers everything from a basic understanding of Redis data types to advanced aspects of Redis high availability, clustering, administration, and troubleshooting. This book will be your great companion to master all aspects of Redis.
+> JUnit is the gold standard for unit testing Java applications. Filled with powerful new features designed to automate software testing, JUnit 5 boosts your productivity and helps avoid debugging nightmares. Whether you're just starting with JUnit or you want to ramp up on the new features, *JUnit in Action, Third Edition* has you covered. Extensively revised with new code and new chapters, *JUnit in Action, Third Edition* is an up-to-date guide to smooth software testing. Dozens of hands-on examples illustrate JUnit 5's innovations for dependency injection, nested testing, parameterized tests, and more. Throughout, you’ll learn how to use JUnit 5 to automate your testing, for a process that consumes less resources, and gives you more time for developing.
 >
-> The book starts off by installing and configuring Redis for you to get started with ease. Moving on, all the data types and features of Redis are introduced in detail. Next, you will learn how to develop applications with Redis in Java, Python, and the Spring Boot web framework. You will also learn replication tasks, which will help you to troubleshoot replication issues. Furthermore, you will learn the steps that need to be undertaken to ensure high availability on your cluster and during production deployment. Toward the end of the book, you will learn the topmost tasks that will help you to troubleshoot your ecosystem efficiently, along with extending Redis by using different modules.
+> ## about the technology
+>
+> The JUnit framework is the gold standard for unit testing Java applications—and knowing it is an essential skill for Java developers. The latest version, JUnit 5, is a total overhaul, now supporting modern Java features like Lambdas and Streams.
+>
+> ## about the book
+>
+> *JUnit in Action, Third Edition* has been completely rewritten for this release. The book is full of examples that demonstrate JUnit's modern features, including its new architecture; nested, tagged, and dynamic tests; and dependency injection. You'll benefit from author Cătălin Tudose's unique "pyramid" testing strategy, which breaks the testing process into layers and sets you on the path to bug-free code creation.
 
 
 
@@ -24,18 +30,19 @@
 
 Status available：:heavy_check_mark: (Completed) | :hourglass_flowing_sand: (Working) | :no_entry: (Not Started) | :orange_book: (Finish reading)
 
-| No.  |                        Chapter Title                         |          Status          |
-| :--: | :----------------------------------------------------------: | :----------------------: |
-| Ch01 |     [JUnit jump-start](./notes/Ch01_JUnit_jumpstart.md)      |    :heavy_check_mark:    |
-| Ch02 | [Exploring core JUnit](./notes/Ch02_exploring_core_JUnit.md) | :hourglass_flowing_sand: |
-| Ch03 |   [JUnit architecture](./notes/Ch03_JUnit_architecture.md)   |        :no_entry:        |
+| No.  |                        Chapter Title                         |       Status       |
+| :--: | :----------------------------------------------------------: | :----------------: |
+|      |                       **Part I JUnit**                       |                    |
+| Ch01 |     [JUnit jump-start](./notes/Ch01_JUnit_jumpstart.md)      | :heavy_check_mark: |
+| Ch02 | [Exploring core JUnit](./notes/Ch02_exploring_core_JUnit.md) |   :orange_book:    |
+| Ch03 |   [JUnit architecture](./notes/Ch03_JUnit_architecture.md)   |   :orange_book:    |
 
 
 
 Powershell script for generating markdown files in batch:
 
 ```powershell
-# Create 13 empty markdown files named Ch##.md:
+# Create 22 empty markdown files named Ch##.md:
 for($i=1; $i -le 13; $i=$i+1){ New-Item -Name "Ch$('{0:d2}' -f $i).md"; }
 ```
 
