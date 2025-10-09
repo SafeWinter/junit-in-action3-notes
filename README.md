@@ -1,4 +1,4 @@
-# 《Redis 4.x Cookbook》Learning Notes
+# 《JUnit in Action, Third Edition》Learning Notes
 
 
 
@@ -6,11 +6,11 @@
 
 ![Redis 4.x Cookbook](assets/cover.png)
 
-|    **Title**    | **Redis 4.x Cookbook** [ISBN: 9781783988167] |
-| :-------------: | :----------------------------------------------------------: |
-|   **Author**    |               **Pengcheng Huang, Zuofei Wang**               |
-| **Publication** |                      **Packt, 2018.2**                       |
-|    **Pages**    |                           **374**                            |
+|    **Title**    | **JUnit in Action, Third Edition** [ISBN: 9781617297045] |
+| :-------------: | :------------------------------------------------------: |
+|   **Author**    |                    **Cătălin Tudose**                    |
+| **Publication** |                   **Manning, 2020.11**                   |
+|    **Pages**    |                         **560**                          |
 
 > **Introduction**
 >
@@ -34,7 +34,7 @@ Status available：:heavy_check_mark: (Completed) | :hourglass_flowing_sand: (Wo
 | :--: | :----------------------------------------------------------: | :----------------: |
 |      |                       **Part I JUnit**                       |                    |
 | Ch01 |     [JUnit jump-start](./notes/Ch01_JUnit_jumpstart.md)      | :heavy_check_mark: |
-| Ch02 | [Exploring core JUnit](./notes/Ch02_exploring_core_JUnit.md) |   :orange_book:    |
+| Ch02 | [Exploring core JUnit](./notes/Ch02_exploring_core_JUnit.md) | :heavy_check_mark: |
 | Ch03 |   [JUnit architecture](./notes/Ch03_JUnit_architecture.md)   |   :orange_book:    |
 
 
