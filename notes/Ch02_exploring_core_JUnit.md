@@ -736,6 +736,17 @@ class DynamicTestsTest {
 
 `Hamcrest` 辅助框架提供了更加声明式的测试断言方法和组合工具，可以让代码可读性更好，同时报错信息的提示更加友好。其中会大量涉及 `Matcher` 对象的组合应用（`matcher` 又称为 **约束（*constraints*）** 或 **判定条件（*predicates*）**，相关概念源自 `Java`、`C++`、`Objective-C`、`Python`、`PHP` 等编程语言）。
 
+必要依赖项：
+
+```xml
+<dependency>
+    <groupId>org.hamcrest</groupId>
+    <artifactId>hamcrest-library</artifactId>
+    <version>2.1</version>
+    <scope>test</scope>
+</dependency>
+```
+
 示例代码（报错信息演示）：
 
 ```java
