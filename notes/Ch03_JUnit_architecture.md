@@ -135,6 +135,17 @@
 
 为了加深印象，本章还基于 `JUnit 4` 演示了自定义 `runner` 运行器和自定义 `rules` 规则的写法，同时附带了两个 `JUnit 4` 内置的 `rules` —— `ExpectedException` 和 `TemporaryFolder` 的用法（主要是为下一章的版本升级做铺垫）。
 
+必需的依赖项：
+
+```xml
+<dependency>
+    <groupId>org.junit.vintage</groupId>
+    <artifactId>junit-vintage-engine</artifactId>
+    <version>5.6.0</version>
+    <scope>provided</scope>
+</dependency>
+```
+
 
 
 ### 3.7.1 示例1：自定义 rules 规则
@@ -337,3 +348,4 @@ public class RuleTester {
 
 
 注意：给出这四个示例的根本目的，是为了突出 `JUnit 4` 自定义扩展的难写和反射机制的种种弊端，为下一章 `JUnit 5` 的优化做铺垫。
+
