@@ -36,7 +36,7 @@ Status available：:heavy_check_mark: (Completed) | :hourglass_flowing_sand: (Wo
 | Ch01 | [JUnit jump-start](./notes/Ch01_JUnit_jumpstart.md "按住 Ctrl 单击查看笔记内容") |    :heavy_check_mark:    |
 | Ch02 | [Exploring core JUnit](./notes/Ch02_exploring_core_JUnit.md "按住 Ctrl 单击查看笔记内容") |    :heavy_check_mark:    |
 | Ch03 | [JUnit architecture](./notes/Ch03_JUnit_architecture.md "按住 Ctrl 单击查看笔记内容") |    :heavy_check_mark:    |
-| Ch04 | [Migrating from JUnit4 to JUnit5](./notes/Ch04_Migrating_from_JUnit4_to_JUnit5.md "按住 Ctrl 单击查看笔记内容") |      :orange_book:       |
+| Ch04 | [Migrating from JUnit4 to JUnit5](./notes/Ch04_Migrating_from_JUnit4_to_JUnit5.md "按住 Ctrl 单击查看笔记内容") |    :heavy_check_mark:    |
 | Ch05 | [Software testing principals](./notes/Ch05_Software_testing_principals.md "按住 Ctrl 单击查看笔记内容") |      :orange_book:       |
 |      |           **Part II Different testing strategies**           |                          |
 | Ch06 |                         Test quality                         | :hourglass_flowing_sand: |
