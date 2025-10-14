@@ -39,7 +39,8 @@ Status available：:heavy_check_mark: (Completed) | :hourglass_flowing_sand: (Wo
 | Ch04 | [Migrating from JUnit4 to JUnit5](./notes/Ch04_Migrating_from_JUnit4_to_JUnit5.md "按住 Ctrl 单击查看笔记内容") |    :heavy_check_mark:    |
 | Ch05 | [Software testing principles](./notes/Ch05_Software_testing_principles.md "按住 Ctrl 单击查看笔记内容") |    :heavy_check_mark:    |
 |      |           **Part II Different testing strategies**           |                          |
-| Ch06 |         [Test quality](./notes/Ch06_Test_quality.md)         | :hourglass_flowing_sand: |
+| Ch06 |         [Test quality](./notes/Ch06_Test_quality.md)         |    :heavy_check_mark:    |
+| Ch07 | [7 Coarse-grained testing with stubs](./notes/Ch07_Coarse_grained_testing_with_stubs.md) | :hourglass_flowing_sand: |
 
 
 
