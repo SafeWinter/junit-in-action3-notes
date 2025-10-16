@@ -258,5 +258,78 @@ public void testGetContentNotFound(){
 
 
 
-## 7.5 演示二：用 Stub 替换服务器连接
+## 7.5 演示二：用 Stub 替换 connection 连接
+
+本例较上一案例更轻量，只对 `connection` 进行 `stub` 模拟，无需集成 `jetty` 容器，利用 `Java` 内置的 `java.net` 包就能达到 `stub` 效果。
+
+缺点是：该方法涉及 `Java URL` 系统的扩展机制，用自定义的 `URLStreamHandlerFactory` 工厂类替换了 `Java` 默认的 `URL` 处理机制。一旦设置成功后，同一 `JVM` 中的所有 `URL` 连接都会被拦截。因此测试后需要重置相关状态（如重启 `JVM` 等）。
+
+该方法的核心思想是 **利用 Java 的 SPI(Service Provider Interface) 模式**，通过替换工厂方法来改变整个 `URL` 处理链的行为，从而实现测试桩的效果。
+
+其测试类的代码逻辑相对简单：
+
+```java
+/**
+ * A test case that tests the WebClient class by stubbing the HTTP connection.
+ */
+public class TestWebClient1 {
+
+    @BeforeAll
+    public static void setUp() {
+        URL.setURLStreamHandlerFactory(protocol -> new URLStreamHandler(){
+            @Override
+            protected URLConnection openConnection(URL url) {
+                return new StubHttpURLConnection(url);
+            }
+        });
+    }
+
+    @Test
+    public void testGetContentOk() throws MalformedURLException {
+        WebClient client = new WebClient();
+        String workingContent = client.getContent(new URL("http://localhost/"));
+        assertEquals("It works", workingContent);
+    }
+}
+
+/**
+ * A stub class to stub the HttpUrl connection. We override the getInputStream method to return the "It works" string.
+ */
+public class StubHttpURLConnection extends HttpURLConnection {
+    private boolean isInput = true;
+    protected StubHttpURLConnection(URL url) {
+        super(url);
+    }
+
+    @Override
+    public InputStream getInputStream() throws IOException {
+        if (!isInput) {
+            throw new ProtocolException(
+                "Cannot read from URLConnection if doInput=false (call setDoInput(true))");
+        }
+        final String data = "It works";
+        ByteArrayInputStream is = new ByteArrayInputStream(data.getBytes());
+        return is;
+    }
+
+    @Override
+    public void connect() {}
+    @Override
+    public void disconnect() {}
+    @Override
+    public boolean usingProxy() { return false; }
+}
+```
+
+由于测试逻辑仅用到了输入流，所以这里重写的是 `getInputStream()` 方法。
+
+另外，如果测试逻辑涉及更多 `HttpURLConnection` 的其他接口，则需重写相应的接口方法补充测试桩代码。这也是该方法的实现难度最容易攀升的地方。
+
+
+
+## 7.6 演示小结
+
+案例一用到的 `jetty` 版本过于落后，案例二为了实现不集成 `jetty` 那样的容器又走入了另一个极端——拦截所有 `URL`。归根结底，是因为作者认为业界不看好 `stub` 模拟的未来，认为它仅仅是 **过去测试理念尚未统一** 下的产物——当时普遍以为测试应该是独立的，不应修改现有代码逻辑。
+
+而新的 `mock` 模拟对象策略，不仅允许修改代码，甚至还鼓励这样做。`mock` 对象的引入不仅是一种单元测试策略，更是一种全新的编码范式。
 
