@@ -40,7 +40,10 @@ Status available：:heavy_check_mark: (Completed) | :hourglass_flowing_sand: (Wo
 | Ch05 | [Software testing principles](./notes/Ch05_Software_testing_principles.md "按住 Ctrl 单击查看笔记内容") |    :heavy_check_mark:    |
 |      |           **Part II Different testing strategies**           |                          |
 | Ch06 |         [Test quality](./notes/Ch06_Test_quality.md)         |    :heavy_check_mark:    |
-| Ch07 | [7 Coarse-grained testing with stubs](./notes/Ch07_Coarse_grained_testing_with_stubs.md) | :hourglass_flowing_sand: |
+| Ch07 | [7 Coarse-grained testing with stubs](./notes/Ch07_Coarse_grained_testing_with_stubs.md) |    :heavy_check_mark:    |
+| Ch08 | [Testing with mock objects](./notes/Ch08_Testing_with_mock_objects.md) | :hourglass_flowing_sand: |
+| Ch09 | [In-container testing](./notes/Ch09_In_container_testing.md) |        :no_entry:        |
+|      |      **Part III Working with JUnit 5 and other tools**       |                          |
 
 
 
