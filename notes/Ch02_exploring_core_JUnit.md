@@ -193,7 +193,7 @@ class SUTTest {
 
 用于测试内部类中的待测试方法。
 
-内部类的经典应用场景是通过 `Builder` 模式初始化一个类：
+内部类的经典应用场景是通过 `Builder` 模式初始化一个类（强烈建议自行手动实现一遍 `Customer` 实体类，加深印象）：
 
 ```java
 public class Customer {
@@ -244,7 +244,7 @@ public class Customer {
 }
 ```
 
-注解用法（L5）：
+`@Nested` 注解的用法（L5）：
 
 ```java
 public class NestedTestsTest {
@@ -277,6 +277,22 @@ public class NestedTestsTest {
 }
 ```
 
+这部分最吸引眼球的是 Builder 构建模式的手动实现，以及全新的断言方法 `assertAll()` 与 `JDK 8` 的 `Lambda` 表达式的结合。根据 `assertAll` 的签名，最后的断言逻辑还可以改写为如下模式，并且都能起到“执行所有断言、但不因某一个失败而中断后续断言的判定”的目的：
+
+```java
+assertAll(
+    () -> assertEquals(Gender.MALE, customer.getGender()),
+    () -> assertEquals(FIRST_NAME, customer.getFirstName()),
+    () -> assertEquals(LAST_NAME, customer.getLastName()),
+    () -> assertEquals(MIDDLE_NAME, customer.getMiddleName()),
+    () -> assertEquals(customerDate, customer.getBecomeCustomer())
+);
+```
+
+本地 `IDEA` 的实测效果如下（起到了很好的分组效果）：
+
+![](../assets/2.12.png)
+
 
 
 ## 2.7 @Tag 注解
@@ -303,7 +319,7 @@ public class NestedTestsTest {
 
 ![](../assets/2.4.png)
 
-原书截图界面和实测版本相差较大，新版 `IDEA` 已通过运行配置文件完成相关设置。根据实测情况，`Tags` 标签可用 `|`、`&` 等符号实现多个标签的组合运行（分别表示 **或**、**且**）。特别地，对于 **且** 的情况还有两种写法：
+原书截图界面和实测版本相差较大，新版 `IDEA` 已通过运行 **配置文件** 来完成相关设置。根据实测情况，`Tags` 标签可用 `|`、`&` 等符号实现多个标签的组合运行（分别表示 **或**、**且**）。特别地，对于 **且** 的情况还有两种写法：
 
 ```java
 // version 1
@@ -320,7 +336,7 @@ public class CustomerTest {
 }
 ```
 
-其中第二种的可读性更好。
+其中第二种的可读性更好。启用 `@Tag` 注解后，执行命令 `mvn test` 将只对指定了标签、且明确设置参与测试的单元测试用例才会最终执行。由于无法保证运行测试的人都使用 `IDEA`，因此更推荐使用 `pom.xml` 来配置 `Tag` 标签。
 
 
 
