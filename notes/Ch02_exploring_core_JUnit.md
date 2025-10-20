@@ -465,39 +465,93 @@ class AssumptionsTest {
 
 ## 2.12 JUnit 5 中内置的依赖注入参数
 
-在新版测试类的构造方法和其他测试方法中，可以通过 **依赖注入** 的方式传参——这是 `JUnit 4` 不具备的新功能。这些参数只能通过依赖注入进行动态解析。通过注册一个参数解析器接口 `ParameterResolver`，开发者可在运行时注入任意数量、任意位置顺序的方法参数。
+在新版测试类的构造方法和其他测试方法中，可以通过 **依赖注入** 的方式传参——这是 `JUnit 4` 不具备的新功能。这些参数只能通过依赖注入进行动态解析。通过注册一个参数解析器接口 `ParameterResolver`，分别实现 `supportsParameter()` 和 `resolveParameter()` 两个接口方法，开发者理论上就可以在运行时注入任意数量、任意位置顺序的方法参数。
+
+
+
+### 2.12.1 内置参数的用法演示
 
 `JUnit 5` 内置了三种参数解析器，可以直接在方法中使用，分别是——
 
-- `TestInfo` 型参数：可访问 `DisplayName`、`Tags` 分组标签集合、当前测试类、当前测试方法等信息。
-- `TestReporter` 型参数：用于测试表报的自定义参数设置，可通过三种重载后的 `publishEntry()` 方法完成键值对的录入。
-- `RepetitionInfo` 型参数：这类参数很特殊，不直接写到参数列表中，且仅限在重复性测试（`@RepeatedTest`）和参数化测试（`@ParameterizedTest`）的测试用例中使用。主要包括以下几个常用参数——
-  - `{index}`：从 1 开始计数；
-  - `{displayName}`：引用 `@DisplayName` 注解中的内容
-  - `{currentRepetition}`：引用当前循环次数，从 1 开始计数
-  - `{totalRepetitions}`：引用所有循环总数
-  - `{0}`、`{1}`、`{2}`：通过方法签名中的参数占位符，可在 `@ParameterizedTest` 注解中动态拼接 `name` 的值，作为旗下动态测试用例的展示名称。
+- `TestInfo` 参数：内部注册了 `TestInfoParameterResolver` 解析器，可以访问 `DisplayName`、`Tags` 分组标签集合、当前测试类、当前测试方法等测试信息。
+- `TestReporter` 参数：内部注册了 `TestReporterParameterResolver` 解析器，可用于测试报表的自定义 `Key-Value` 型参数设置，并提供三种不同的 `publishEntry()` 重载方法，满足实际场景下的多种键值对录入。
+- `RepetitionInfo` 型参数：这类参数相对比较特殊，它们不直接写到参数列表中，且仅限在重复性测试（`@RepeatedTest`）和参数化测试（`@ParameterizedTest`）的测试用例中使用。主要包括以下几个常用参数——
+  - `{index}`：从 1 开始计数，表示当前测试的编号；
+  - `{displayName}`：引用 `@DisplayName` 注解中的自定义内容；
+  - `{currentRepetition}`：引用当前用例的循环次数，同样从 1 开始计数；
+  - `{totalRepetitions}`：引用本次测试的循环总数；
+  - `{0}`、`{1}`、`{2}`：通过方法签名中各参数的占位符写法，可在 `@ParameterizedTest` 注解中动态拼接 `name` 属性的值，作为旗下动态测试用例的展示名称。
 
-示例代码1（基于 CSV 的参数化测试）：
+理论介绍完毕，下面是代码演示时间。
+
+首先是 `TestInfo` 参数的用法（作构造函数参数、以及作测试方法的参数）：
 
 ```java
-class ParameterizedWithCsvSourceTest {
-    private final WordCounter wordCounter = new WordCounter();
+class TestInfoTest {
 
-    @ParameterizedTest(name = "Line {index}: [{0}] - {1}")
-    @CsvSource(value = {"2, Unit testing", "3, JUnit in Action", "4, Write solid Java code"})
-    @DisplayName(value = "should parse CSV file")
-    void testWordsInSentence(int expected, String sentence) {
-        assertEquals(expected, wordCounter.countWords(sentence));
+    TestInfoTest(TestInfo testInfo) {
+        assertEquals("TestInfoTest", testInfo.getDisplayName());
+    }
+
+    @BeforeEach
+    void setUp(TestInfo testInfo) {
+        String displayName = testInfo.getDisplayName();
+        assertTrue(displayName.equals("display name of the method") || displayName.equals("testGetNameOfTheMethod(TestInfo)"));
+    }
+
+    @Test
+    void testGetNameOfTheMethod(TestInfo testInfo) {
+        assertEquals("testGetNameOfTheMethod(TestInfo)", testInfo.getDisplayName());
+    }
+
+    @Test
+    @DisplayName("display name of the method")
+    void testGetNameOfTheMethodWithDisplayNameAnnotation(TestInfo testInfo) {
+        assertEquals("display name of the method", testInfo.getDisplayName());
     }
 }
 ```
 
-运行结果：
+本地运行结果：
 
-![](../assets/2.5.png)
+![](../assets/2.13.png)
 
-示例代码2（重复性测试）：
+接着是 `TestReporter` 的用法：
+
+```java
+class TestReporterTest {
+    @Test
+    void testReportSingleValue(TestReporter testReporter) {
+        testReporter.publishEntry("Single value");
+    }
+
+    @Test
+    void testReportKeyValuePair(TestReporter testReporter) {
+        testReporter.publishEntry("Key", "Value");
+    }
+
+    @Test
+    void testReportMultipleKeyValuePairs(TestReporter testReporter) {
+        Map<String, String> values = new HashMap<>();
+        values.put("user", "John");
+        values.put("password", "secret");
+
+        testReporter.publishEntry(values);
+    }
+}
+```
+
+本地实测效果：
+
+![](../assets/2.14.png)
+
+至于第三种内置参数，需要先了解一下参数化测试的概念。简单理解，在功能测试时测试者经常会根据一组固定的输入调用同一个模板的测试用例，这些测试用例的核心逻辑都一样，只是测试输入略有不同，这时就可以像写 `for` 循环那样批量生成测试用例，实现 **同一测试逻辑在不同参数的作用下多次运行** 的效果，这就是参数化测试。`JUnit 5` 为这类测试场景也提供了相应的内置循环参数，在 `@Repeated` 注解的重复测试中，可以使用的参数有：
+
+- `{index}`：从 1 开始计数；
+- `{displayName}`：引用 `@DisplayName` 注解中的内容
+- `{currentRepetition}`：引用当前循环次数，从 1 开始计数
+
+例如：
 
 ```java
 public class RepeatedTestsTest {
@@ -528,6 +582,142 @@ public class RepeatedTestsTest {
 
 ![](../assets/2.6.png)
 
+而在 `@ParameterizedTest` 注解的参数化测试中，还可以使用位置占位符。例如基于 `CSV` 数据源的参数化测试：
+
+```java
+class ParameterizedWithCsvSourceTest {
+    private final WordCounter wordCounter = new WordCounter();
+
+    @ParameterizedTest(name = "Line {index}: [{0}] - {1}")
+    @CsvSource(value = {"2, Unit testing", "3, JUnit in Action", "4, Write solid Java code"})
+    @DisplayName(value = "should parse CSV file")
+    void testWordsInSentence(int expected, String sentence) {
+        assertEquals(expected, wordCounter.countWords(sentence));
+    }
+}
+```
+
+运行结果：
+
+![](../assets/2.5.png)
+
+上述演示适用于 `CSV` 数据量较小的情况。如果是大量成批出现的 `CSV` 数据源，应该换用 `@CsvFileSource` 注解，直接解析 `CSV` 文件：
+
+```java
+class ParameterizedWithCsvFileSourceTest {
+    private WordCounter wordCounter = new WordCounter();
+
+    @ParameterizedTest
+    @CsvFileSource(resources = "/word_counter.csv")
+    void testWordsInSentence(int expected, String sentence) {
+        assertEquals(expected, wordCounter.countWords(sentence));
+    }
+}
+/*
+CSV 文件内容：
+2, Unit testing
+3, JUnit in Action
+4, Write solid Java code
+*/
+```
+
+最终效果（用例的默认显示格式为 `[{index}] <每行读取到的内容>`）：
+
+![](../assets/2.15.png)
+
+
+
+### 2.12.2 自定义注入参数的用法演示
+
+可能是出于篇幅考虑，作者并未对自定义的参数注入进行演示。这里一并补充完整。
+
+假设要在多个测试用例中通过自定义注解 `@RandomAnnotation` 注入任意数量的随机数作为参数，就可以这样操作：
+
+1. 先创建一个自定义注解 `RandomAnnotation`：
+
+```java
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.PARAMETER)
+public @interface RandomAnnotation {
+}
+```
+
+2. 接着新建一个实现了 `ParameterResolver` 接口方法的实现类 `RandomNumberResolver`：
+
+```java
+import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.ParameterContext;
+import org.junit.jupiter.api.extension.ParameterResolutionException;
+import org.junit.jupiter.api.extension.ParameterResolver;
+
+import java.util.Random;
+
+public class RandomNumberResolver implements ParameterResolver {
+
+    private final Random random = new Random();
+
+    @Override
+    public boolean supportsParameter(
+            ParameterContext paramCtx,
+            ExtensionContext extCtx
+    ) throws ParameterResolutionException {
+        // 只支持用 @RandomAnnotation 注解的 int 或 long 类型参数
+        return paramCtx.isAnnotated(RandomAnnotation.class) &&
+                (paramCtx.getParameter().getType() == int.class ||
+                        paramCtx.getParameter().getType() == long.class);
+    }
+
+    @Override
+    public Object resolveParameter(
+            ParameterContext paramCtx, 
+            ExtensionContext extCtx
+    ) throws ParameterResolutionException {
+        // 提供随机数
+        Class<?> type = paramCtx.getParameter().getType();
+        if (type == int.class) {
+            return random.nextInt(100); // 生成 0-99 的随机整数
+        } else if (type == long.class) {
+            return random.nextLong();
+        } else {
+            throw new IllegalArgumentException("Unsupported parameter type: " + type);
+        }
+    }
+}
+```
+
+3. 最后编写如下测试用例（注意自定义的解析器的引用位置和自定义注解的用法）：
+
+```java
+@ExtendWith(RandomNumberResolver.class)
+public class RandomNumberTest {
+
+    @Test
+    @DisplayName("Test with a random int number")
+    void testWithRandomNumber(@RandomAnnotation int randomNumber) {
+        // JUnit 5 会使用我们的 RandomNumberResolver 来提供 randomNumber 的值
+        System.out.println("Injected random number: " + randomNumber);
+        assertTrue(randomNumber >= 0 && randomNumber < 100);
+    }
+
+    @Test
+    @DisplayName("Test with two random integers and compare ")
+    void testWithMultipleRandomParameters(@RandomAnnotation int number1, @RandomAnnotation int number2) {
+        // 每个被 @RandomAnnotation 注解的 int 参数都会触发一次解析
+        System.out.println("Injected random numbers: " + number1 + ", " + number2);
+        assertTrue(number1 != number2); // 有很大概率通过，但非绝对，这里仅作演示
+    }
+}
+```
+
+验证结果：
+
+![](../assets/2.16.png)
+
 
 
 ## 2.13 基于手动硬编码的字符串数组的参数化测试
@@ -557,6 +747,8 @@ class ParameterizedWithValueSourceTest {
 通过组合使用 `@ParameterizedTest` 注解和 `@EnumSource` 注解，可以自定义参数化测试用例的展示名称：
 
 ```java
+import static org.junit.jupiter.params.provider.EnumSource.Mode.EXCLUDE;
+
 class ParameterizedWithEnumSourceTest {
     private WordCounter wordCounter = new WordCounter();
 
