@@ -356,7 +356,7 @@ public class CustomerTest {
 
 > [!tip]
 >
-> 关于 `Hamcrest` 框架
+> **关于 `Hamcrest` 框架**
 >
 > 该框架是辅助编写 `JUnit` 测试用例的第三方工具框架，内置了大量可读性极强的断言方法和辅助工具（各种 `matcher` 匹配器）。其名称 `Hamcrest` 就是 `matchers` 各字母变位后的组合单词，以突出其灵活实用的断言特性。
 

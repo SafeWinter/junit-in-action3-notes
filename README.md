@@ -40,10 +40,25 @@ Status available：:heavy_check_mark: (Completed) | :hourglass_flowing_sand: (Wo
 | Ch05 | [Software testing principles](./notes/Ch05_Software_testing_principles.md "按住 Ctrl 单击查看笔记内容") |    :heavy_check_mark:    |
 |      |           **Part II Different testing strategies**           |                          |
 | Ch06 |         [Test quality](./notes/Ch06_Test_quality.md)         |    :heavy_check_mark:    |
-| Ch07 | [7 Coarse-grained testing with stubs](./notes/Ch07_Coarse_grained_testing_with_stubs.md) |    :heavy_check_mark:    |
-| Ch08 | [Testing with mock objects](./notes/Ch08_Testing_with_mock_objects.md) | :hourglass_flowing_sand: |
-| Ch09 | [In-container testing](./notes/Ch09_In_container_testing.md) |        :no_entry:        |
+| Ch07 | [Coarse-grained testing with stubs](./notes/Ch07_Coarse_grained_testing_with_stubs.md) |    :heavy_check_mark:    |
+| Ch08 | [Testing with mock objects](./notes/Ch08_Testing_with_mock_objects.md) |    :heavy_check_mark:    |
+| Ch09 | [In-container testing](./notes/Ch09_In_container_testing.md) |    :heavy_check_mark:    |
 |      |      **Part III Working with JUnit 5 and other tools**       |                          |
+| Ch10 | [Running JUnit tests from Maven 3](./notes/Ch10_Running_JUnit_tests_from_Maven3.md) |      :orange_book:       |
+| Ch11 | [Running JUnit tests from Gradle 6](./notes/Ch11_Running_JUnit_tests_from_Gradle6.md) | :hourglass_flowing_sand: |
+| Ch12 |  [JUnit 5 IDE support](./notes/Ch12_JUnit5_IDE_support.md)   |        :no_entry:        |
+| Ch13 | [Continuous integration with JUnit 5](./notes/Ch13_Continuous_integration_with_JUnit5.md) |        :no_entry:        |
+|      |    **Part IV Working with modern frameworks and JUnit 5**    |                          |
+| Ch14 | [JUnit 5 extension model](./notes/Ch14_JUnit5_extension_model.md) |        :no_entry:        |
+| Ch15 | [Presentation-layer testing](./notes/Ch15_Presentation_layer_testing.md) |        :no_entry:        |
+| Ch16 | [Testing Spring applications](./notes/Ch16_Testing_Spring_application.md) |        :no_entry:        |
+| Ch17 | [Testing Spring Boot applications](./notes/Ch17_Testing_Spring_Boot_applications.md) |        :no_entry:        |
+| Ch18 |   [Testing a REST API](./notes/Ch18_Testing_a_REST_API.md)   |        :no_entry:        |
+| Ch19 | [Testing database applications](./notes/Ch19_Testing_database_applications.md) |        :no_entry:        |
+|      |       **Part V Developing applications with JUnit 5**        |                          |
+| Ch20 | [Test-driven development with JUnit 5](./notes/Ch20_TDD_with_JUnit5.md) |        :no_entry:        |
+| Ch21 | [Behavior-driven development with JUnit 5](./notes/Ch21_BDD_with_JUnit5.md) |        :no_entry:        |
+| Ch22 | [Implementing a test pyramid strategy with JUnit 5](./notes/Ch22_Implementing_a_test_pyramid_strategy_with_JUnit5.md) |        :no_entry:        |
 
 
 
