@@ -722,7 +722,7 @@ public class RandomNumberTest {
 
 ## 2.13 基于手动硬编码的字符串数组的参数化测试
 
-通过组合使用 `@ParameterizedTest` 注解和 `@ValueSource` 注解，可以自定义参数化测试用例的展示名称：
+通过组合使用 `@ParameterizedTest` 注解和 `@ValueSource` 注解，可以自定义参数化测试用例的展示名称（默认将 `strings` 数组中的元素值作为各测试用例的子标题）：
 
 ```java
 class ParameterizedWithValueSourceTest {
@@ -744,7 +744,7 @@ class ParameterizedWithValueSourceTest {
 
 ## 2.14 基于枚举类的参数化测试
 
-通过组合使用 `@ParameterizedTest` 注解和 `@EnumSource` 注解，可以自定义参数化测试用例的展示名称：
+通过组合使用 `@ParameterizedTest` 注解和 `@EnumSource` 注解，可以自定义参数化测试用例的展示名称（能在枚举注解内设置筛选条件，这个特性让人眼前一亮）：
 
 ```java
 import static org.junit.jupiter.params.provider.EnumSource.Mode.EXCLUDE;
