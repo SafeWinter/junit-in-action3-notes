@@ -119,9 +119,55 @@
 
 ## 4.4 @Category 注解的升级
 
-新版 `JUnit` 通过 `@Tag` 和 `@Tags` 实现对 `@Category` 的升级。旧版 `@Category` 注解的写法非常繁琐（P73）。
+新版 `JUnit` 通过 `@Tag` 和 `@Tags` 实现对 `@Category` 的升级。旧版 `@Category` 注解的写法非常繁琐（P73）：
 
-实测发现同一个测试类或方法可以加注多个 `@Tag` 注解，也可以在 `@Tags` 注解中填入一个 `@Tag` 数组，效果是一样的：
+```java
+// 先声明两个接口分别表示两种示例分类
+public interface IndividualTests {
+}
+public interface RepositoryTests {
+}
+
+// 然后作为 @Category 注解的参数传入
+public class JUnit4CustomerTest {
+    private String CUSTOMER_NAME = "John Smith";
+    @Category(IndividualTests.class)
+    @Test
+    public void testCustomer() {
+        Customer customer = new Customer(CUSTOMER_NAME);
+        assertEquals("John Smith", customer.getName());
+    }
+}
+
+// 如果需要对多个用例添加多个分类，写法就会复杂些
+@Category({IndividualTests.class, RepositoryTests.class})
+public class JUnit4CustomersRepositoryTest {
+    private String CUSTOMER_NAME = "John Smith";
+    private CustomersRepository repository = new CustomersRepository();
+    @Test
+    public void testNonExistence() {
+        boolean exists = repository.contains(CUSTOMER_NAME);
+        assertFalse(exists);
+    }
+    @Test
+    public void testCustomerPersistence() {
+        repository.persist(new Customer(CUSTOMER_NAME));
+        assertTrue(repository.contains("John Smith"));
+    }
+}
+
+// 如果需要对不同的测试类批量添加分类，写法就更复杂了
+@RunWith(Categories.class)
+@Categories.IncludeCategory(IndividualTests.class)
+@Suite.SuiteClasses({JUnit4CustomerTest.class, 
+    JUnit4CustomersRepositoryTest.class})
+public class JUnit4ndividualTestsSuite {
+}
+```
+
+而新版分类的写法只需要标注 `@Tag` 或 `@Tags` 即可，极大简化了上述模板，当然也关闭了一些特别复杂的分类组合的写法（可能确实不常用吧）。
+
+实测是还发现，同一个测试类或方法可以加注多个 `@Tag` 注解，也可以在 `@Tags` 注解中填入一个 `@Tag` 数组，效果是一样的：
 
 ```java
 @Tag("individual")

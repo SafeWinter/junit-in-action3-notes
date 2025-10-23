@@ -2,12 +2,12 @@
 
 
 
-> Architecture is the stuff that’s hard to change later. And there should be as little of that stuff as possible.
+> *Architecture is the stuff that’s hard to change later. And there should be as little of that stuff as possible.*
 > 架构是那些日后难以变更的部分，应当尽可能减少这类内容。
 >
 > —— Martin Fowler
 
-本章介绍与 `JUnit` 架构相关的知识点，从 `JUnit 4` 的架构特点切入，再讨论旧版架构存在的问题以及新版 `JUnit 5` 重点关注的部分，让读者对 JUnit 的架构特点及演进过程有一个大致的了解。
+本章介绍与 `JUnit` 架构相关的知识点，从 `JUnit 4` 的架构特点切入，再讨论旧版架构存在的问题以及新版 `JUnit 5` 重点关注的部分，让读者对 `JUnit` 的架构特点及演进过程有一个大致的了解。
 
 
 
