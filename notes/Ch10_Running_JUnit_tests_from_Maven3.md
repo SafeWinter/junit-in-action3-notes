@@ -397,3 +397,86 @@ mvn surefire-report:report
 >
 > 原来，这个 `compiler` 插件默认的 `JDK` 版本仍然是 `8`，官方推荐显式声明具体版本。因此最简单的解决办法就是改为 `8` 或 `11`（本机的 `JDK21` 不是正常安装，因此也会报错）。
 
+
+
+## 10.5 实战演练：航班管理应用
+
+本章的最后呼应“实战”主题，完整演示了如何利用 `Maven` 从零创建一个虚构的航班管理应用的全过程，其间还编写了一个单元测试，并最终将项目打包成 `jar` 文件、进而安装到本地 `Maven` 仓库。具体实战过程如下：
+
+首先在 `C:\junitbook\` 目录下打开命令行，运行以下 `Maven` 命令：
+
+```cmd
+mvn archetype:generate -DgroupId=com.testeddatasystems.flights -DartifactId=flightsmanagement -DarchetypeArtifactid=maven-artifact-mojo
+```
+
+中途所有设置一律按默认设置执行，直接按回车键继续：
+
+![](../assets/10.9.png)
+
+运行成功后，就得到一个 `flightsmanagement` 文件夹：
+
+![](../assets/10.8.png)
+
+然后从 `IDEA` 导入该项目，效果如下：
+
+![](../assets/10.10.png)
+
+删除默认的 `App.java` 及其测试类 `AppTest.java`，新增一个乘客实体类 `Passenger.java`：
+
+```java
+package com.testeddatasystems.flights;
+
+public class Passenger {
+    private String identifier;
+    private String name;
+    public Passenger(String identifier, String name) {
+        this.identifier = identifier;
+        this.name = name;
+    }
+    public String getIdentifier() {
+        return identifier;
+    }
+    public String getName() {
+        return name;
+    }
+    @Override
+    public String toString() {
+        return "Passenger " + getName() +
+                " with identifier: " + getIdentifier();
+    }
+}
+```
+
+然后将光标放到 `Passenger` 上，按 <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>T</kbd> 弹出新建单元测试的快捷窗口，按 <kbd>Enter</kbd> 继续后根据提示操作（测试类的名称都生成好了，只需按 <kbd>Enter</kbd> 确认）即可：
+
+![](../assets/10.11.png)
+
+![](../assets/10.12.png)
+
+然后添加如下测试用例：
+
+```java
+@Test
+void testPassenger() {
+    Passenger passenger = new Passenger("123-456-789", "John Smith");
+    assertEquals("Passenger John Smith with identifier: 123-456-789",
+        passenger.toString());
+}
+```
+
+再从 `Maven` 侧边栏中执行命令 `mvn clean install`，将项目打包并安装到本地 `Maven` 仓库：
+
+![](../assets/10.13.png)
+
+最终，`target` 目录下新增了一个名为 `flightsmanagement-1.0-SNAPSHOT.jar` 的 `jar` 文件；本地 `Maven` 库也多了一个对应的本地依赖：
+
+![](../assets/10.14.png)
+
+![](../assets/10.15.png)
+
+> [!tip]
+>
+> **小贴士**
+>
+> 实战过程中尽量多用 `IDEA` 的各种键盘操作，尽量少通过鼠标完成操作，以提高构建效率。
+
