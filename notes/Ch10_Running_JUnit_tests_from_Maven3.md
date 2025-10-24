@@ -395,7 +395,9 @@ mvn surefire-report:report
 >
 > ![](../assets/10.5.png)
 >
-> 原来，这个 `compiler` 插件默认的 `JDK` 版本仍然是 `8`，官方推荐显式声明具体版本。因此最简单的解决办法就是改为 `8` 或 `11`（本机的 `JDK21` 不是正常安装，因此也会报错）。
+> 根本原因：安装 `JDK21` 时忘了同步更新 `JAVA_HOME` 的值，报错时还是 `JDK11` 所在的路径（太粗心）。
+>
+> 另外，`Maven` 官方文档也推荐这种显式声明 `Java` 发行版本的写法，否则 `maven-compiler-plugin` 默认还是按 `Java 8` 处理。
 
 
 
