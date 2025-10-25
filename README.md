@@ -45,8 +45,8 @@ Status available：:heavy_check_mark: (Completed) | :hourglass_flowing_sand: (Wo
 | Ch09 | [In-container testing](./notes/Ch09_In_container_testing.md) |    :heavy_check_mark:    |
 |      |      **Part III Working with JUnit 5 and other tools**       |                          |
 | Ch10 | [Running JUnit tests from Maven 3](./notes/Ch10_Running_JUnit_tests_from_Maven3.md) |    :heavy_check_mark:    |
-| Ch11 | [Running JUnit tests from Gradle 6](./notes/Ch11_Running_JUnit_tests_from_Gradle6.md) | :hourglass_flowing_sand: |
-| Ch12 |  [JUnit 5 IDE support](./notes/Ch12_JUnit5_IDE_support.md)   |        :no_entry:        |
+| Ch11 | [Running JUnit tests from Gradle](./notes/Ch11_Running_JUnit_tests_from_Gradle.md) |    :heavy_check_mark:    |
+| Ch12 |  [JUnit 5 IDE support](./notes/Ch12_JUnit5_IDE_support.md)   | :hourglass_flowing_sand: |
 | Ch13 | [Continuous integration with JUnit 5](./notes/Ch13_Continuous_integration_with_JUnit5.md) |        :no_entry:        |
 |      |    **Part IV Working with modern frameworks and JUnit 5**    |                          |
 | Ch14 | [JUnit 5 extension model](./notes/Ch14_JUnit5_extension_model.md) |        :no_entry:        |
