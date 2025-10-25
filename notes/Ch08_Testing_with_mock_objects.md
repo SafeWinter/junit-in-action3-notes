@@ -12,7 +12,7 @@
 
 
 > *Programming today is a race between software engineers striving to build bigger and better idiot-proof programs, and the Universe trying to produce bigger and better idiots. So far, the Universe is winning.*
-> 如今的编程是一场竞赛：软件工程师们在竭尽全力地构建更庞大、更厉害的“傻瓜式”程序，而宇宙则在不遗余力地制造更强大、更厉害的傻瓜。目前暂居上风的是宇宙。
+> 如今的编程是一场竞赛：软件工程师们在竭尽全力地构建更庞大、更厉害的“傻瓜式”程序，而宇宙则在不遗余力地制造更强大、更厉害的傻瓜。目前看来还是宇宙更胜一筹。
 >
 > —— Rich Cook
 
