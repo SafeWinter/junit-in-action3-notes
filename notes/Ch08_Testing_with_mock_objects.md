@@ -360,27 +360,257 @@ public void testGetContentOk() throws Exception {
 
 这通常有两种实现策略：**工厂方法（*Method Factory*）**和 **类工厂（*Class Factory*）**。
 
+在尝试这两种方法前，还要牢固树立一个意识：**代码要主动为测试开路，否则就该重构原逻辑**。
+
 
 
 ### 8.5.1 基于 Method Factory 工厂方法的 mock 模拟
 
+刚才说了 `java.net.URL` 无法继承新的测试类，因此不利于后期测试，需要重构。重构思路是：将引入外部逻辑的代码片段提取到某个方法内，让原逻辑从直接接收 `URL` 实例的返回结果，重构为调用一个包含 `URL` 实例参数的新方法，然后将返回结果赋给原来的变量（`L6`）：
 
+```java
+public class WebClient1 {
+    public String getContent(URL url) {
+        StringBuffer content = new StringBuffer();
+
+        try {
+            HttpURLConnection connection = createHttpURLConnection(url);
+            InputStream is = connection.getInputStream();
+
+            int count;
+            while (-1 != (count = is.read())) {
+                content.append(new String(Character.toChars(count)));
+            }
+        } catch (IOException e) {
+            return null;
+        }
+
+        return content.toString();
+    }
+
+    /**
+     * Creates an HTTP connection.
+     */
+    protected HttpURLConnection createHttpURLConnection(URL url) throws IOException {
+        return (HttpURLConnection) url.openConnection();
+    }
+}
+```
+
+注意 `L23` 行的方法修饰符 `protected`，暗示了后续的测试类需要继承 `WebClient1` 并重写该方法。按照隔离外部逻辑的总思路，只要最后返回一个 `HttpURLConnection` 对象即可，至于是不是通过 `url.openConnection()` 方法获取的 **根本不重要**。于是有了如下的测试类（内部类）：
+
+```java
+private static class TestableWebClient extends WebClient1 {
+
+    private HttpURLConnection connection;
+
+    public void setHttpURLConnection(HttpURLConnection connection) {
+        this.connection = connection;
+    }
+
+    @Override
+    public HttpURLConnection createHttpURLConnection(URL url) throws IOException {
+        return this.connection;
+    }
+}
+```
+
+这样一改造，`connection` 的控制权就完全由模拟的测试类来控制，再次体现了 `mock` 对象模拟的隔离本质：
+
+```java
+@Test
+public void testGetContentOk() throws Exception {
+    MockHttpURLConnection mockConnection = new MockHttpURLConnection();
+    mockConnection.setExpectedInputStream(new ByteArrayInputStream("It works".getBytes()));
+
+    TestableWebClient client = new TestableWebClient();
+    client.setHttpURLConnection(mockConnection);
+
+    String result = client.getContent(new URL("http://localhost"));
+    assertEquals("It works", result);
+}
+```
+
+这种抽离核心外部逻辑到一个父级方法、并在专供测试的子类中重写该方法的模拟策略，就叫 `Method Factory`（工厂方法）。为了让控制权完全由测试用例掌控，新的 `mock` 对象还可以自行添加一些辅助逻辑（如上述 `setter`）进一步方便测试。
+
+但这种策略的问题也很突出：新增的测试类只是通过继承模拟了原逻辑，但并完美：为什么一定要从 `URL` 引入需要的输入流呢？就不能实际和测试都走同一条路吗？**类工厂（*Class Factory*）** 的模拟策略就是为了回答这个问题的。
 
 
 
 ### 8.5.2 基于 Class Factory 类工厂的 mock 模拟
 
+既然 `Method Factory` 不甚完美，说明原方法还有改进空间。为了让测试和实际代码逻辑保持一致，被测系统的签名可以重构为传入一个新的工厂接口 `ConnectionFactory`，该接口规定了获取输入流必须遵循的格式：
 
+```java
+/**
+ * A connection factory interface. Different connection
+ * factories that we have, must implement this interface.
+ */
+public interface ConnectionFactory {
+    /**
+     * Read the data from the connection.
+     *
+     * @return
+     * @throws Exception
+     */
+    InputStream getData() throws Exception;
+}
+```
+
+对应的新的被测方法就重构成了：
+
+```java
+public class WebClient2 {
+    /**
+     * Open a connection to the given URL and read the content
+     * out of it. In case of an exception we return null.
+     */
+    public String getContent(ConnectionFactory connectionFactory) {
+        String workingContent;
+
+        StringBuffer content = new StringBuffer();
+        try (InputStream is = connectionFactory.getData()) {
+            int count;
+            while (-1 != (count = is.read())) {
+                content.append(new String(Character.toChars(count)));
+            }
+
+            workingContent = content.toString();
+        } catch (Exception e) {
+            workingContent = null;
+        }
+
+        return workingContent;
+    }
+}
+```
+
+这样，利用面向对象编程中的多态机制，后期只要实现了该接口的实体类都可以作为参数传入，`Method Factory` 的问题就完美解决了：测试时传入 `mock` 实现、实际传入真实场景下的实现；这种解决方案甚至还解绑了具体的通信协议，不再拘泥于 `URL` 实例背后的 `http` 协议：
+
+```java
+public class MockConnectionFactory implements ConnectionFactory {
+
+    private InputStream inputStream;
+    public void setData(InputStream stream) {
+        this.inputStream = stream;
+    }
+
+    @Override
+    public InputStream getData() throws Exception
+    {
+        return inputStream;
+    }
+}
+```
+
+相应的测试用例写起来同样很简单：
+
+```java
+public class TestWebClient1 {
+    @Test
+    public void testGetContentOk() throws Exception {
+        MockConnectionFactory mockConnectionFactory = new MockConnectionFactory();
+        mockConnectionFactory.setData(new ByteArrayInputStream("It works".getBytes()));
+
+        WebClient2 client = new WebClient2();
+        String workingContent = client.getContent(mockConnectionFactory);
+
+        assertEquals("It works", workingContent);
+    }
+}
+```
+
+像这样完全从方便测试的角度出发重构原逻辑、将外部逻辑通过传入一个工厂接口来代理的模拟策略，就叫 `Class Factory` 类方法策略。
 
 
 
 ## 8.6 模拟4：从 IO 流的 mock 模拟探究被测系统的内部状态监控
 
+本章模拟 `Connection` 对象的示例还留了个不大不小的坑：测试逻辑涉及 `IO` 流的创建，但并没有显式地、手动地关闭。谁能保证今后绝不会有内存泄露的风险？`mock` 对象模拟技术的另一个强大之处，就在于测试时还能监控 `SUT` 的内部状态。
+
+实现思路：替换原来的 `ByteArrayInputStream` 的初始化，改成一个可以监控输入流是否关闭的模拟 `IO` 流测试类：
+
+```java
+public class MockInputStream extends InputStream {
+
+    private String buffer;
+
+    // Current position in the stream.
+    private int position = 0;
+
+    // How many times the close method was called.
+    private int closeCount = 0;
+
+    // Sets the buffer.
+    public void setBuffer(String buffer) {
+        this.buffer = buffer;
+    }
+
+    // Reads from the stream.
+    public int read() throws IOException {
+        if (position == this.buffer.length()) {
+            return -1;
+        }
+        return buffer.charAt(this.position++);
+    }
+
+    // Close the stream.
+    public void close() throws IOException {
+        closeCount++;
+        super.close();
+    }
+
+    /**
+     * Verify how many times the close method was called.
+     *
+     * @throws java.lang.AssertionError
+     */
+    public void verify() throws java.lang.AssertionError {
+        if (closeCount != 1) {
+            throw new AssertionError("close() should have been called once and once only");
+        }
+    }
+}
+```
+
+注意观察 `close()` 方法和 `verify()` 方法，一旦测试逻辑没有正确关闭该输入流，后者就会抛出一个断言错误（`AssertionError`），最终会在 `IDEA` 中显示为未通过的用例。
+
+重构完模拟的输入流，而测试用例的写法也要作相应调整：
+
+```java
+public class TestWebClient {
+    @Test
+    public void testGetContentOk() throws Exception {
+        MockConnectionFactory mockConnectionFactory = new MockConnectionFactory();
+        MockInputStream mockStream = new MockInputStream();
+        mockStream.setBuffer("It works");
+        mockConnectionFactory.setData(mockStream);
+        
+        WebClient2 client = new WebClient2();
+        String workingContent = client.getContent(mockConnectionFactory);
+
+        assertEquals("It works", workingContent);
+        mockStream.verify();
+    }
+}
+```
+
+注意第 `L13` 行手动调用了 `verify()` 方法，一旦输入流对象 `mockStream` 没有关闭（即没有被精确关闭过一次），测试用例就会抛出一个 `AssertionError` 而宣告失败（重构后的读取逻辑已经采用 `try-with-resources` 语法糖，因此不会报错）。
+
+> **关于模拟测试中的期望（*expectation*）的概念**
+>
+> 在讨论 `mock` 对象时，**期望（*expectation*）**常常作为模拟对象的一个固有特性，专门用于验证调用该模拟对象的外部类的某种行为 **是否正确**，例如这里的 `close()` 方法是否被精确执行过一次、模拟数据库的连接是否正常等。
+>
+> 期望机制还可以验证不同的生命周期方法是否按预期的顺序执行测试逻辑，或者验证模拟对象接收的某个参数是否满足具体的限定条件。其核心设计理念是：
+>
+> - 验证预期的行为模式；
+> - 对模拟对象的使用情况、中间状态等提供有价值的反馈信息。
+
 
 
 ## 8.7 主流 mock 模拟框架对比
 
-
+`mock` 对象模拟技术固然强大，但写起来也是真繁琐。好在先行者已经提前踩完这些坑并推出了多种 `mock` 框架简化这一过程。作为本章最后一节内容，作者选取了三个主流框架进行演示：`EasyMock`、`JMock` 和 `Mockito`，让大家通过示例代码考察它们的区别和联系。
 
 
 
