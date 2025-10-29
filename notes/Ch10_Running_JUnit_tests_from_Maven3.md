@@ -300,7 +300,7 @@ OS name: "windows 10", version: "10.0", arch: "amd64", family: "windows"
 
 ### 10.4.1 编译器插件
 
-即 `maven-compiler-plugin` 插件。每次运行 `mvn compile` 命令，其实就在调用该插件。编译前 `Maven` 还会经历一个验证阶段（对应命令 `mvn  validate`），负责将 `pom.xml` 的依赖下载的本地，并引入项目的 `classpath` 中。而编译完成后的所有类文件则放入 `target/classes/` 文件夹下。
+即 `maven-compiler-plugin` 插件。每次运行 `mvn compile` 命令，其实就在调用该插件。编译前 `Maven` 还会经历一个验证阶段（对应命令 `mvn validate`），负责将 `pom.xml` 的依赖下载的本地，并引入项目的 `classpath` 中。而编译完成后的所有类文件则放入 `target/classes/` 文件夹下。
 
 该插件支持手动指定编译器支持的源代码版本，以及编译生成的字节码目标版本：
 
