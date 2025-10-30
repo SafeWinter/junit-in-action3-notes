@@ -25,18 +25,20 @@
 
 ```mermaid
 graph LR
-    code --> run
-    run --> test
-    test --> code
+    a[code] --> b[run]
+    b[run] --> c[test]
+    c[test] --> d[code]
+    d[code] --> a[code]
 ```
 
 如果是 `TDD` 模式则略有不同，大致为：[`test` :arrow_right: `code` :arrow_right: `run` :arrow_right: `test`]：
 
 ```mermaid
 graph LR
-    test --> code
-    code --> run
-    run --> test
+    a[test] --> b[code]
+    b[code] --> c[run]
+    c[run] --> d[test]
+    d[test] --> a[test]
 ```
 
 
