@@ -49,7 +49,7 @@ Status available：:heavy_check_mark: (Completed) | :hourglass_flowing_sand: (Wo
 | Ch12 |  [JUnit 5 IDE support](./notes/Ch12_JUnit5_IDE_support.md)   | :heavy_check_mark: |
 | Ch13 | [Continuous integration with JUnit 5](./notes/Ch13_Continuous_integration_with_JUnit5.md) | :heavy_check_mark: |
 |      |    **Part IV Working with modern frameworks and JUnit 5**    |                    |
-| Ch14 | [JUnit 5 extension model](./notes/Ch14_JUnit5_extension_model.md) |     :no_entry:     |
+| Ch14 | [JUnit 5 extension model](./notes/Ch14_JUnit5_extension_model.md) | :heavy_check_mark: |
 | Ch15 | [Presentation-layer testing](./notes/Ch15_Presentation_layer_testing.md) |     :no_entry:     |
 | Ch16 | [Testing Spring applications](./notes/Ch16_Testing_Spring_application.md) |     :no_entry:     |
 | Ch17 | [Testing Spring Boot applications](./notes/Ch17_Testing_Spring_Boot_applications.md) |     :no_entry:     |
