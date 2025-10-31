@@ -327,6 +327,8 @@ OS name: "windows 10", version: "10.0", arch: "amd64", family: "windows"
 
 即 `maven-surefire-plugin` 插件，它是命令 `mvn test` 运行背后调用的插件，负责执行具体的单元测试（不仅限于 `JUnit` 单元测试）。通常在执行测试前，还会先执行一个 `clean` 命令（即 `mvn clean test`），以消除历史编译内容对本次测试的潜在干扰。
 
+由于 `Maven` 的测试执行能力是由 `maven-surefire-plugin` 实现的，它通过生命周期绑定与 `mvn test` 命令关联。当项目的默认配置不符合预期时（如命名不规范等），很可能运行 `mvn test` 命令会自动跳过测试，此时就必须显式配置 `maven-surefire-plugin` 插件方可执行单元测试。
+
 该插件也可以指定筛选条件，使得符合某种命名规范的测试用例才会最终执行。例如只执行后缀为 `-Test.java` 的测试用例：
 
 ```xml
