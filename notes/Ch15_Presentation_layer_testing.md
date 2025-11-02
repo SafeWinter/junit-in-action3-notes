@@ -605,16 +605,6 @@ ChromeDriver 142.0.7444.59 (4b8153ab58d3c3f4c9f7e4baad9616ecf80db5fa-refs/branch
 geckodriver 0.36.0 (a3d508507022 2025-02-24 15:57 +0000)
 ```
 
-最后是更新随书源码中的 `Selenium` 依赖版本：
-
-```xml
-<dependency>
-    <groupId>org.seleniumhq.selenium</groupId>
-    <artifactId>selenium-java</artifactId>
-    <version>4.38.0</version>
-</dependency>
-```
-
 
 
 ### 15.5.1 示例1：对特定 Web 浏览器进行测试

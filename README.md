@@ -50,8 +50,8 @@ Status available：:heavy_check_mark: (Completed) | :hourglass_flowing_sand: (Wo
 | Ch13 | [Continuous integration with JUnit 5](./notes/Ch13_Continuous_integration_with_JUnit5.md) |    :heavy_check_mark:    |
 |      |    **Part IV Working with modern frameworks and JUnit 5**    |                          |
 | Ch14 | [JUnit 5 extension model](./notes/Ch14_JUnit5_extension_model.md) |    :heavy_check_mark:    |
-| Ch15 | [Presentation-layer testing](./notes/Ch15_Presentation_layer_testing.md) | :hourglass_flowing_sand: |
-| Ch16 | [Testing Spring applications](./notes/Ch16_Testing_Spring_application.md) |        :no_entry:        |
+| Ch15 | [Presentation-layer testing](./notes/Ch15_Presentation_layer_testing.md) |    :heavy_check_mark:    |
+| Ch16 | [Testing Spring applications](./notes/Ch16_Testing_Spring_application.md) | :hourglass_flowing_sand: |
 | Ch17 | [Testing Spring Boot applications](./notes/Ch17_Testing_Spring_Boot_applications.md) |        :no_entry:        |
 | Ch18 |   [Testing a REST API](./notes/Ch18_Testing_a_REST_API.md)   |        :no_entry:        |
 | Ch19 | [Testing database applications](./notes/Ch19_Testing_database_applications.md) |        :no_entry:        |
