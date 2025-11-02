@@ -39,7 +39,7 @@
 
 
 
-## 15.2 HtmlUnit 用法演示
+## 15.2 HtmlUnit 简介
 
 `HtmlUnit`（[https://htmlunit.sourceforge.io/](https://htmlunit.sourceforge.io/)）是一款基于 `Java` 语言开发的开源无头浏览器（headless browser）框架。无头浏览器即没有 `GUI` 界面的浏览器。它能以编程的方式模拟用户在浏览器上对 `Web` 应用进行的各种操作，测试全程不显示任何用户界面。
 
@@ -57,6 +57,10 @@
 
 本章实测代码旨在熟悉 `HtmlUnit` 具备的基本设置、基础功能，并在最新版的语法下完成各项测试目标。
 
+
+
+## 15.3 HtmlUnit 用法演示
+
 `HtmlUnit` 执行测试的基本流程：
 
 - 调用 `getPage()` 方法；
@@ -66,7 +70,7 @@
 
 
 
-### 15.2.1 示例1：基础设置及页面元素基础测试
+### 15.3.1 示例1：基础设置及页面元素基础测试
 
 `HtmlUnit` 部分的所有测试用例几乎都需要继承一个新建的抽象类 `ManagedWebClient`，目的是为了统一配置 `@BeforeEach` 和 `@AfterEach` 方法，让核心测试逻辑更加突出。新版抽象类定义如下：
 
@@ -148,7 +152,7 @@ public class HtmlUnitPageTest extends ManagedWebClient {
 
 
 
-### 15.2.2 示例2：利用参数化测试提效 HtmlUnit 用例
+### 15.3.2 示例2：利用参数化测试提效 HtmlUnit 用例
 
 将浏览器版本作为参数化测试的动态参数，可对同一页面快速生成一组等效的用例。新版示例代码如下：
 
@@ -207,7 +211,7 @@ public class JavadocPageAllBrowserTest {
 
 
 
-### 15.2.3 示例3：创建页面内容相对固定的测试
+### 15.3.3 示例3：创建页面内容相对固定的测试
 
 这类用例类似第八章介绍的 `Mock` 对象，需要人为设置模拟的请求和页面响应内容，人为地固化页面内容，以方便测试：
 
@@ -283,7 +287,7 @@ public void testInLineHtmlFixtures() throws IOException, URISyntaxException {
 
 
 
-### 15.2.4 示例4：页面表单测试
+### 15.3.4 示例4：页面表单测试
 
 准备两个 `HTML` 示例文件，一个是表单页，另一个表单正常提交后的页面：
 
@@ -423,7 +427,7 @@ public class FormTest extends ManagedWebClient {
 
 
 
-### 15.2.5 示例5：测试页面 confirm 弹框内容
+### 15.3.5 示例5：测试页面 confirm 弹框内容
 
 与 `alert` 弹窗类似，`HtmlUnit` 也支持 `confirm` 确认对话框内容的测试，并且可以自定义确认对话框的处理逻辑，通过 `webClient.setConfirmHandler(handler)` 实现（对 `alert` 调用的是 `webClient.setAlertHandler(handler)`）：
 
@@ -440,7 +444,6 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -547,5 +550,312 @@ public interface AlertHandler extends Serializable {
 
 
 
-## 15.3 Selenium 用法演示
+## 15.4 Selenium 简介
 
+`Selenium`（[https://www.selenium.dev/](https://www.selenium.dev/)）是一套免费开源的 `Web` 应用测试工具集。它与 `HtmlUnit` 在相同虚拟机中模拟浏览器来运行测试的方式不同，`Selenium` 的优势在于能够在特定操作系统上针对真实浏览器运行测试。
+
+`Selenium WebDriver` 是编写测试时要用到的核心接口。作为 `W3C` 的推荐标准，当前的主流浏览器均实现了该接口。`WebDriver` 利用这些浏览器对自动化的原生支持，可以直接向浏览器发起调用，从而实现表现层的自动化测试。
+
+`Selenium WebDriver` 的架构示意图如下：
+
+![](../assets/15.6.png)
+
+`WebDriver` 包含四个组件：
+
+- **`Selenium` 客户端库**：即编写测试用例需要的 `Selenium` 库，支持多种编程语言（`Java`、`C#`、`PHP`、`Python`、`Ruby` 等）；
+- **基于 `HTTP` 的 `JSON` 有线协议**：每个 `WebDriver` 都有自己的 `HTTP` 服务器。该协议是一种通过 `HTTP` 服务器传递信息的 `REST API`；
+- **浏览器驱动**：每个浏览器都有独立的驱动程序（driver），用于与对应的浏览器进行通信，同时又不暴露浏览器功能的内部逻辑；当浏览器驱动接到命令时，该命令会在对应的浏览器上执行，并以 `HTTP` 响应的形式返回结果。
+- **浏览器**：即 `Selenium` 兼容的浏览器，如 `Chrome`、`Firefox`、`Edge`、`Safari` 等。
+
+
+
+常见的浏览器及其对应驱动梳理：
+
+|     Web 浏览器      |       浏览器驱动类       |
+| :-----------------: | :----------------------: |
+|   `Google Chrome`   |      `ChromeDriver`      |
+| `Internet Explorer` | `InternetExplorerDriver` |
+|      `Safari`       |      `SafariDriver`      |
+|       `Opera`       |      `OperaDriver`       |
+|      `Firefox`      |     `FirefoxDriver`      |
+|       `Edge`        |       `EdgeDriver`       |
+
+
+
+
+
+## 15.5 Selenium 用法演示
+
+实战准备工作：
+
+- 分别下载 `Chrome`、`Firefox`、`Edge` 的 `Web` 驱动（必须与本机浏览器版本一致）——
+  - `ChromeDriver`：[win64 zip](https://storage.googleapis.com/chrome-for-testing-public/142.0.7444.59/win64/chromedriver-win64.zip)（本机 `Chrome` 版本：`v142.0.7444.60`）
+  - `FirefoxDriver`：[geckodriver-v0.36.0-win64.zip](https://github.com/mozilla/geckodriver/releases/download/v0.36.0/geckodriver-v0.36.0-win64.zip)（本机 `Firefox` 版本：`v144.0.2 (64-bit)`）
+  - `EdgeDriver`：[edgedriver_win64.zip](https://msedgedriver.microsoft.com/142.0.3595.53/edgedriver_win64.zip)（本机 `Edge` 版本：`v142.0.3595.53`）
+- 将上述压缩包内的驱动程序统一解压到 `D:/manning/drivers/` 文件夹下，并将该路径配置到环境变量 `PATH` 中。
+
+测试环境变量是否生效（均已生效）：
+
+```powershell
+> msedgedriver --version
+Microsoft Edge WebDriver 142.0.3595.53 (e9d637e9672ec1e9386e16d27f47c1384f2bae93)
+> chromedriver --version
+ChromeDriver 142.0.7444.59 (4b8153ab58d3c3f4c9f7e4baad9616ecf80db5fa-refs/branch-heads/7444_52@{#4})
+> geckodriver --version
+geckodriver 0.36.0 (a3d508507022 2025-02-24 15:57 +0000)
+```
+
+最后是更新随书源码中的 `Selenium` 依赖版本：
+
+```xml
+<dependency>
+    <groupId>org.seleniumhq.selenium</groupId>
+    <artifactId>selenium-java</artifactId>
+    <version>4.38.0</version>
+</dependency>
+```
+
+
+
+### 15.5.1 示例1：对特定 Web 浏览器进行测试
+
+```java
+public class ChromeSeleniumTest {
+
+    private WebDriver driver;
+
+    @BeforeEach
+    void setUp() {
+        driver = new ChromeDriver();
+    }
+
+    @Test
+    void testChromeManning() {
+        driver.get("https://www.manning.com/");
+        assertThat(driver.getTitle(), is("Manning"));
+    }
+
+    @Test
+    void testChromeGoogle() {
+        driver.get("https://www.google.com");
+        assertThat(driver.getTitle(), is("Google"));
+    }
+
+
+    @AfterEach
+    void tearDown() {
+        driver.quit();
+    }
+}
+```
+
+注意：实测过程中会弹出一个新的浏览器窗口加载网页（即 `Chrome` 驱动程序），稍后自动关闭：
+
+![](../assets/15.8.png)
+
+最终实测效果：
+
+![](../assets/15.7.png)
+
+
+
+### 15.5.2 示例2：使用 Web 浏览器测试导航
+
+实测用 `Firefox` 驱动访问维基百科首页，并从捐赠链接打开捐赠页面，判定页面标题是否一致（原 `Content` 内容链接早已改版，以下代码根据最新页面修改）：
+
+```java
+public class WikipediaAccessTest {
+
+    private RemoteWebDriver driver;
+
+    @BeforeEach
+    void setUp() {
+        driver = new FirefoxDriver();
+    }
+
+    @Test
+    void testWikipediaAccess() {
+        driver.get("https://en.wikipedia.org/");
+        assertThat(driver.getTitle(), is("Wikipedia, the free encyclopedia"));
+
+        WebElement contents = driver.findElement(By.linkText("Donate"));
+        assertTrue(contents.isDisplayed());
+
+        contents.click();
+        assertThat(driver.getTitle(), is("Make your donation now - Wikimedia Foundation"));
+    }
+
+    @AfterEach
+    void tearDown() {
+        driver.quit();
+    }
+}
+```
+
+实测效果（中途 `Firefox` 驱动程序窗口会自动打开 `Wiki` 首页，然后自动跳转到 `Donate` 页面）：
+
+![](../assets/15.10.png)
+
+![](../assets/15.9.png)
+
+
+
+### 15.5.3 示例3：测试多个 Web 浏览器
+
+利用 `JUnit 5` 的参数化测试注解及相关写法，还可以批量注入不同的浏览器 `driver` 实例，一次性执行多个测试：
+
+```java
+public class MultiBrowserSeleniumTest {
+
+    private WebDriver driver;
+
+    public static Collection<WebDriver> getBrowserVersions() {
+        return Arrays.asList(new WebDriver[]{ new FirefoxDriver(), new ChromeDriver() });
+    }
+
+    @ParameterizedTest
+    @MethodSource("getBrowserVersions")
+    void testManningAccess(WebDriver driver) {
+        this.driver = driver;
+        driver.get("https://www.manning.com/");
+        assertThat(driver.getTitle(), is("Manning"));
+    }
+
+    @ParameterizedTest
+    @MethodSource("getBrowserVersions")
+    void testGoogleAccess(WebDriver driver) {
+        this.driver = driver;
+        driver.get("https://www.google.com");
+        assertThat(driver.getTitle(), is("Google"));
+    }
+
+    @AfterEach
+    void tearDown() {
+        driver.quit();
+    }
+}
+```
+
+实测时发现 `Edge` 驱动程序存在很多问题：先提示系统变量 `webdriver.edge.driver` 缺失，通过静态代码块手动补全后又报该框架没有执行上下文。后者尝试过升级 `Selenium` 版本、新增 `Driver Manager` 依赖、提问 `DeepSeek` 修改测试逻辑等方法，均以失败告终：
+
+![](../assets/15.12.png)
+
+剔除 `Edge` 驱动后，最终运行结果：
+
+![](../assets/15.11.png)
+
+
+
+### 15.5.4 示例4：用不同的 Web 浏览器测试 Google 搜索和导航
+
+本节案例通过对 `Chrome` 和 `Firefox` 驱动进行参数化测试，实测其通过谷歌检索维基百科，并点击第一个词条进入其首页，然后点开其 `Donate` 捐赠页面完成相应测试逻辑。实测代码如下（已调整）：
+
+```java
+public class GoogleSearchTest {
+
+    private RemoteWebDriver driver;
+
+    public static Collection<RemoteWebDriver> getBrowserVersions() {
+        return Arrays.asList(new RemoteWebDriver[]{new ChromeDriver(), new FirefoxDriver()});
+    }
+
+    @ParameterizedTest
+    @MethodSource("getBrowserVersions")
+    void testGoogleSearch(RemoteWebDriver driver) {
+        this.driver = driver;
+        driver.get("http://www.google.com");
+        WebElement element = driver.findElement(By.name("q"));
+        element.sendKeys("en.wikipedia.org");
+        driver.findElement(By.name("q")).sendKeys(Keys.ENTER);
+
+        // wait until the Google page shows the result
+        WebElement myDynamicElement = (new WebDriverWait(driver, 100))
+                .until(ExpectedConditions.presenceOfElementLocated(By.id("result-stats")));
+
+        List<WebElement> findElements = driver.findElements(By.xpath("//*[@id='rso']//a/h3"));
+
+        findElements.get(0).click();
+
+        assertEquals("https://en.wikipedia.org/wiki/Main_Page", driver.getCurrentUrl());
+        assertThat(driver.getTitle(), is("Wikipedia, the free encyclopedia"));
+
+        WebElement contents = driver.findElement(By.linkText("Donate"));
+        assertTrue(contents.isDisplayed());
+        contents.click();
+
+        assertThat(driver.getTitle(), is("Make your donation now - Wikimedia Foundation"));
+    }
+
+    @AfterEach
+    void tearDown() {
+        driver.quit();
+    }
+}
+```
+
+和之前不同的是，频繁调用测试可能触发谷歌的人机检测模块，需要手动验证一下。其余流程均自动进行：
+
+![](../assets/15.13.png)
+
+最终效果：
+
+![](../assets/15.14.png)
+
+
+
+### 15.5.5 示例5：测试网站的身份验证
+
+本例模拟了在浏览器打开指定页面后，再从当前页面点开一个登录页，并自动完成帐号信息的填写（一次正确+一次错误）：
+
+```java
+public class LoginTest {
+
+    private Homepage homepage;
+    private WebDriver webDriver;
+
+    public static Collection<WebDriver> getBrowserVersions() {
+        return Arrays.asList(new WebDriver[]{new FirefoxDriver(), new ChromeDriver()});
+    }
+
+    @ParameterizedTest
+    @MethodSource("getBrowserVersions")
+    public void loginWithValidCredentials(WebDriver webDriver) {
+        this.webDriver = webDriver;
+        homepage = new Homepage(webDriver);
+        homepage.openFormAuthentication()
+                .loginWith("tomsmith", "SuperSecretPassword!")
+                .thenLoginSuccessful();
+    }
+
+    @ParameterizedTest
+    @MethodSource("getBrowserVersions")
+    public void loginWithInvalidCredentials(WebDriver webDriver) {
+        this.webDriver = webDriver;
+        homepage = new Homepage(webDriver);
+        homepage.openFormAuthentication()
+                .loginWith("tomsmith", "SuperSecretPassword")
+                .thenLoginUnsuccessful();
+    }
+
+    @AfterEach
+    void tearDown() {
+        webDriver.quit();
+    }
+}
+```
+
+以下是实测过程中的自动填写表单时的动态截图：
+
+![](../assets/15.15.png)
+
+最终执行结果：
+
+![](../assets/15.16.png)
+
+
+
+> [!note]
+>
+> **注意**
+>
+> 本章没有详细讨论 `HtmlUnit` 和 `Selenium` 爬取网页元素及内容的具体 `API` 写法，因为它们很可能随着版本的升级而不断改进。因此学习本章时重点在于把握大的操作流程和粗粒度的底层逻辑，实际工作中遇到类似场景再深入挖掘相关接口。
