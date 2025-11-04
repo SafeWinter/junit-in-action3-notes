@@ -52,8 +52,8 @@ Status available：:heavy_check_mark: (Completed) | :hourglass_flowing_sand: (Wo
 | Ch14 | [JUnit 5 extension model](./notes/Ch14_JUnit5_extension_model.md) |    :heavy_check_mark:    |
 | Ch15 | [Presentation-layer testing](./notes/Ch15_Presentation_layer_testing.md) |    :heavy_check_mark:    |
 | Ch16 | [Testing Spring applications](./notes/Ch16_Testing_Spring_application.md) |    :heavy_check_mark:    |
-| Ch17 | [Testing Spring Boot applications](./notes/Ch17_Testing_Spring_Boot_applications.md) | :hourglass_flowing_sand: |
-| Ch18 |   [Testing a REST API](./notes/Ch18_Testing_a_REST_API.md)   |        :no_entry:        |
+| Ch17 | [Testing Spring Boot applications](./notes/Ch17_Testing_Spring_Boot_applications.md) |    :heavy_check_mark:    |
+| Ch18 |   [Testing a REST API](./notes/Ch18_Testing_a_REST_API.md)   | :hourglass_flowing_sand: |
 | Ch19 | [Testing database applications](./notes/Ch19_Testing_database_applications.md) |        :no_entry:        |
 |      |       **Part V Developing applications with JUnit 5**        |                          |
 | Ch20 | [Test-driven development with JUnit 5](./notes/Ch20_TDD_with_JUnit5.md) |        :no_entry:        |
