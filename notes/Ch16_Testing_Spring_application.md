@@ -111,9 +111,9 @@ public class Passenger {
 
 
 
-## 16.4 利用 Spring4 + JUnit 4 践行 IoC 原则
+## 16.4 IoC 实战一：只用 Spring 中的类
 
-将 `Passenger` 和 `Country` 解耦后，再通过一个对比案例，看看遵循 `IoC` 原则实例化 `Passenger` 和传统方式得到的乘客实例究竟有无区别。
+将 `Passenger` 和 `Country` 解耦后，再通过一个对比案例，看看遵循 `IoC` 原则去实例化 `Passenger`，和传统方式实例化究竟有没有区别。
 
 为了顺便演示两个框架的演变过程，这里先用旧版 `Spring4` + `JUnit 4` 搭建测试环境。
 
@@ -123,18 +123,13 @@ public class Passenger {
 <!-- Spring framework 4 -->
 <dependency>
     <groupId>org.springframework</groupId>
-    <artifactId>spring-context</artifactId>
-    <version>4.2.5.RELEASE</version>
-</dependency>
-<dependency>
-    <groupId>org.springframework</groupId>
-    <artifactId>spring-test</artifactId>
+    <artifactId>spring-context</artifactId><!-- 提供 ClassPathXmlApplicationContext 类 -->
     <version>4.2.5.RELEASE</version>
 </dependency>
 <!-- JUnit 4 -->
 <dependency>
     <groupId>junit</groupId>
-    <artifactId>junit</artifactId>
+    <artifactId>junit</artifactId><!-- 提供 @Before、@Test -->
     <version>4.12</version>
 </dependency>
 ```
@@ -220,9 +215,31 @@ public class SimpleAppTest {
 
 
 
-## 16.5 使用 Spring TestContext 框架
+## 16.5 IoC 实战二：引入 Spring 4 注解
 
-`Spring TestContext` 框架是 `Spring` 框架对单元测试和集成测试做的集成，支持多种测试框架（`JUnit 3.x`、`JUnit 4.x`、`TestNG` 等）。上述案例套用 `Spring` 注解的等效版本为：
+`Spring TestContext` 框架是 `Spring` 框架对单元测试和集成测试做的集成，支持多种测试框架（`JUnit 3.x`、`JUnit 4.x`、`TestNG` 等）。为此需要调整以下 Maven 依赖：
+
+```xml
+<!-- Spring framework 4 -->
+<dependency>
+    <groupId>org.springframework</groupId>
+    <artifactId>spring-context</artifactId><!-- 提供 @Autowired -->
+    <version>4.2.5.RELEASE</version>
+</dependency>
+<dependency>
+    <groupId>org.springframework</groupId>
+    <artifactId>spring-test</artifactId><!-- 提供 SpringJUnit4ClassRunner、@ContextConfiguration -->
+    <version>4.2.5.RELEASE</version>
+</dependency>
+<!-- JUnit 4 -->
+<dependency>
+    <groupId>junit</groupId>
+    <artifactId>junit</artifactId><!-- 提供 @RunWith、@Before、@Test -->
+    <version>4.12</version>
+</dependency>
+```
+
+上述案例套用 `Spring` 注解的等效版本为：
 
 ```java
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -270,24 +287,23 @@ public class SpringAppTest {
 
 
 
-## 16.6 改为 Spring 5 + JUnit 5 版本
+## 16.6 IoC 实战三：升级到 Spring 5 + JUnit 5
 
 将 `Maven` 依赖升级到 `Spring 5` 和 `JUnit 5`：
 
 ```xml
-<!-- Spring framework -->
+<!-- Spring 5 -->
 <dependency>
     <groupId>org.springframework</groupId>
     <artifactId>spring-context</artifactId>
     <version>5.2.0.RELEASE</version>
 </dependency>
-
 <dependency>
     <groupId>org.springframework</groupId>
     <artifactId>spring-test</artifactId>
     <version>5.2.0.RELEASE</version>
 </dependency>
-
+<!-- JUnit 5 -->
 <dependency>
     <groupId>org.junit.jupiter</groupId>
     <artifactId>junit-jupiter-api</artifactId>
@@ -340,6 +356,196 @@ public class SpringAppTest {
 
 
 ## 16.7 Spring 5 + JUnit 5 实战：实现观察者模式
+
+需求描述：示例项目成功注册一名乘客后（简化为乘客类的实例化），需要通过经办人（`registerManager`）回应一则确认消息给乘客。
+
+该需求可以通过 **观察者模式（*Observer pattern*）** 来实现：`Passenger` 类实例化成功后，由 `registerManager` 推送一个反馈事件；关注该事件的观察者（未必是乘客本人）从事件中变更乘客状态为 **已确认**，然后以某种方式回应该事件（如控制台打印一则消息）。
+
+> [!tip]
+>
+> **观察者模式**
+>
+> 在该模式下，被观察主体（subject）会主动维护一组依赖（`dependents`，即观察者或监听器）。当主体方触发一个依赖方关注的事件时，就会通知这些观察者；观察者通过各自的 `Listener` 方法响应收到的事件，实现各自的响应逻辑。
+>
+> 被观察者和观察者的相互作用如下图所示：
+>
+> ![](../assets/16.6.png)
+>
+> 具体到本示例中就是：
+>
+> ![](../assets/16.7.png)
+
+在 `Spring` 框架下，`registerManager` 可以通过 `ApplicationContext` 接口的 `pushEvent(event)` 方法推送某个事件；事件接收方通过添加 `@EventListener` 注解关联到具体的事件响应逻辑（变更乘客状态，并打印一则确认信息）。
+
+因此，该需求可拆解为以下几个子任务：
+
+- 主客体识别：`registerManager` 为主体（被观察者），`PassengerRegistrationListener` 为客体（观察者）；
+- `registerManager` 推送一个 **注册事件**，客体接收该事件并实现反馈逻辑：
+  - 变更 `Passenger` 的注册状态（需新增一个 `isRegistered` 字段）；
+  - 控制台打印一则消息，表示已经注册成功。
+- 新增注册事件实体，要求能从该事件获取到带确认的 `passenger` 对象；
+- 修改 `XML` 配置完成指定包路的 `Bean` 扫描；
+- 编写测试用例，通过依赖注入给 `passenger` 和 `registerManager` 赋值，并推送一则注册事件。
+
+具体实现如下：
+
+首先改造 `Passenger` 实体类，新增一个标记属性 `isRegistered`，并补全 `getter`、`setter` 等方法：
+
+```java
+public class Passenger {
+    private String name;
+    private Country country;
+    private boolean isRegistered;
+
+    // -- snip --
+    public boolean isRegistered() {
+        return isRegistered;
+    }
+
+    public void setIsRegistered(boolean isRegistered) {
+        this.isRegistered = isRegistered;
+    }
+
+    @Override
+    public String toString() {
+        return "Passenger{name='" + name + "'\', country=" + country + ", registered=" + isRegistered + "}";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Passenger passenger = (Passenger) o;
+        return isRegistered == passenger.isRegistered &&
+                Objects.equals(name, passenger.name) &&
+                Objects.equals(country, passenger.country);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, country, isRegistered);
+    }
+}
+```
+
+然后新增 `RegistrationManager` 类，并关联一个 `applicationContext` 属性：
+
+```java
+@Service
+public class RegistrationManager implements ApplicationContextAware {
+	private ApplicationContext applicationContext;
+
+	public ApplicationContext getApplicationContext() {
+		return applicationContext;
+	}
+
+	@Override
+	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+		this.applicationContext = applicationContext;
+	}
+}
+```
+
+再新增一个乘客注册事件类 `PassengerRegistrationEvent`，并关联一个 `passenger` 属性并作为事件源（`source`）：
+
+```java
+public class PassengerRegistrationEvent extends ApplicationEvent {
+
+	private Passenger passenger;
+
+	public PassengerRegistrationEvent(Passenger passenger) {
+		super(passenger);
+		this.passenger = passenger;
+	}
+
+	public Passenger getPassenger() {
+		return passenger;
+	}
+
+	public void setPassenger(Passenger passenger) {
+		this.passenger = passenger;
+	}
+}
+```
+
+接着创建一个观察者类 `PassengerRegistrationListener`，在响应方法中接收该事件，并实现要求的事件响应逻辑：
+
+```java
+@Service
+public class PassengerRegistrationListener {
+    @EventListener
+    public void confirmRegistration(PassengerRegistrationEvent passengerRegistrationEvent) {
+        passengerRegistrationEvent.getPassenger().setIsRegistered(true);
+        System.out.println("Confirming the registration for the passenger: "
+                + passengerRegistrationEvent.getPassenger());
+    }
+}
+```
+
+再修改 `application-context.xml` 配置文件，实现指定包路的自动扫描：
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <bean id="passenger" class="com.manning.junitbook.spring.Passenger">
+        <constructor-arg name="name" value="John Smith"/>
+        <property name="country" ref="country"/>
+        <property name="isRegistered" value="false"/>
+    </bean>
+
+    <bean id="country" class="com.manning.junitbook.spring.Country">
+        <constructor-arg name="name" value="USA"/>
+        <constructor-arg name="codeName" value="US"/>
+    </bean>
+    <!-- 自动扫描 com.manning.junitbook.spring 包路下的 Bean 定义 -->
+    <context:component-scan base-package="com.manning.junitbook.spring" />
+</beans>
+```
+
+最后编写测试用例，在核心逻辑中发起一次事件推送：
+
+```java
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration("classpath:application-context.xml")
+public class RegistrationTest {
+
+	@Autowired
+	private Passenger passenger;
+
+	@Autowired
+	private RegistrationManager registrationManager;
+
+	@Test
+	public void testPersonRegistration() {
+		System.out.println("Before registering: " + passenger);
+		registrationManager.getApplicationContext().publishEvent(new PassengerRegistrationEvent(passenger));
+		System.out.println("After registering:");
+		System.out.println(passenger);
+		assertTrue(passenger.isRegistered());
+	}
+}
+```
+
+注意事项：
+
+- `passenger` 的实例化依旧通过之前的 `XML` 文件来完成；
+- 最终的事件响应逻辑由标注了 `@EventListener` 的 `confirmRegistration()` 方法具体实现；
+- 被观察主体 `registrationManager` 和观察者客体 `PassengerRegistrationListener` 的实例化均由 `@Service` 注解完成；为此，需要在 `application-context.xml` 中添加一个自动扫描 `Bean` 定义的标签 `<context:component-scan />`；
+- `registrationManager` 和 `PassengerRegistrationListener` 的关联，并没有显式调用示意图中的 `attach(listener)` 方法，而是通过 **`@EventListener` 注解** 和 **Spring 的应用上下文** 自动建立的。该过程是在 `Spring` 扫描到 `@EventListener` 注解后，由 `Spring` 框架自动关联的。
+
+实测效果：
+
+![](../assets/16.5.png)
+
+
+
+
+
+
 
 
 
