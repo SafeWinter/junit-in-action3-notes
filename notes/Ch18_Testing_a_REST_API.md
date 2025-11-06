@@ -237,7 +237,241 @@ public class Application {
 
 ## 18.4 RESTful API 接口的测试
 
+### 18.4.1 新增 Passenger REST API 接口
 
+前面建立关于 `Country` 实体的 `REST API` 接口旨在跑通整个流程，而本章要重点演示的是基于乘客实体 `Passenger` 的 `REST API` 接口。它同样涉及 `CRUD` 基础操作。利用 `IDEA` 的 `Endpoints` 工具可以快速查看当前项目的所有 `API` 接口，工具窗口下方甚至还给出了每个接口的 `OpenAPI` 规范描述以及 `curl` 命令的调用格式，非常方便：
+
+![](../assets/18.6.png)
+
+为此，需要先改造 `Passenger` 实体类。根据定义，每个乘客实例都包含三个属性：`name`、`country` 和 `isRegistered`。其中 `country` 是 `Country` 类的实例，在考虑乘客数据的持久化时必须明确 `Country` 和 `Passenger` 之间的映射关系。这里显然是 **一对多** 关系：一则国籍信息可以被多个乘客实例引用。因此改造如下：
+
+```java
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+
+import java.util.Objects;
+
+@Entity
+public class Passenger {
+    @Id
+    @GeneratedValue
+    private Long id;
+
+    private String name;
+
+    @ManyToOne
+    private Country country;
+
+    private boolean isRegistered;
+
+    public Passenger() {
+        this(null);
+    }
+    public Passenger(String name) {
+        this.name = name;
+    }
+    // -- snip --
+}
+```
+
+与 `Country` 不同，`Passenger` 没有现成的唯一标识做主键，于是新增一个 `id` 属性；此外，在 `country` 属性上添加了 `@ManyToOne` 注解。单击属性左侧的关系图标还可以查看 `IDEA` 提供的持久层视图，进一步验证两者的对应关系：
+
+![](../assets/18.7.png)
+
+接着创建乘客的 `DAO` 接口 `PassengerRepository`，注意主键类型必须与实体类保持一致（`Long`）：
+
+```java
+public interface PassengerRepository extends JpaRepository<Passenger, Long> {
+}
+```
+
+然后创建 `PassengerController`，分别实现 `CRUD` 各请求的响应逻辑：
+
+```java
+@RestController
+public class PassengerController {
+
+    @Autowired
+    private PassengerRepository repository;
+
+    @Autowired
+    private Map<String, Country> countriesMap;
+
+    @GetMapping("/passengers")
+    List<Passenger> findAll() {
+        return repository.findAll();
+    }
+
+    @PostMapping("/passengers")
+    @ResponseStatus(HttpStatus.CREATED)
+    Passenger createPassenger(@RequestBody Passenger passenger) {
+        return repository.save(passenger);
+    }
+
+    @GetMapping("/passengers/{id}")
+    Passenger findPassenger(@PathVariable Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new PassengerNotFoundException(id));
+    }
+
+    @PatchMapping("/passengers/{id}")
+    Passenger patchPassenger(@RequestBody Map<String, String> updates, @PathVariable Long id) {
+
+        return repository.findById(id)
+                .map(passenger -> {
+
+                    String name = updates.get("name");
+                    if (null != name) {
+                        passenger.setName(name);
+                    }
+
+                    Country country = countriesMap.get(updates.get("country"));
+                    if (null != country) {
+                        passenger.setCountry(country);
+                    }
+
+                    String isRegistered = updates.get("isRegistered");
+                    if (null != isRegistered) {
+                        passenger.setIsRegistered(isRegistered.equalsIgnoreCase("true"));
+                    }
+                    return repository.save(passenger);
+                })
+                .orElseThrow(() -> new PassengerNotFoundException(id));
+
+    }
+
+    @DeleteMapping("/passengers/{id}")
+    void deletePassenger(@PathVariable Long id) {
+        repository.deleteById(id);
+    }
+}
+```
+
+上述代码除了 `@PatchMapping` 用得较少外，其余都比较常见；部分项目可能处于安全考虑还会拦截除 `GET`、`POST` 以外的其他请求类型。这里只演示标准模式下的接口写法。对于需要手动设置响应码的，可像 `@ResponseStatus(HttpStatus.CREATED)` 这样添加到对应的处理方法上。
+
+为确保项目启动时获取到有效的乘客列表，还需要同步修改启动类 `Application`，将包含乘客信息的 `CSV` 文件内容提前存入内存数据库（`L20`）：
+
+```java
+@SpringBootApplication
+@Import(FlightBuilder.class)
+public class Application {
+
+	@Autowired
+	private Map<String, Country> countriesMap;
+
+	@Autowired
+	private Flight flight;
+
+	public static void main(String[] args) {
+		SpringApplication.run(Application.class, args);
+	}
+
+    @Bean
+    CommandLineRunner configureRepository(CountryRepository countryRepository,
+                                          PassengerRepository passengerRepository) {
+		return args -> {
+			countryRepository.saveAll(countriesMap.values());
+			passengerRepository.saveAll(flight.getPassengers());
+		};
+	}
+}
+```
+
+
+
+### 18.4.2 简单测试乘客 API
+
+启动项目，然后使用 `curl` 命令尝试调用新创建的乘客信息 `REST API` 接口（浏览器无法直接发送 `POST` 请求，因此不考虑）。这里顺便梳理一下在 `Windows Terminal` 终端的 `PowerShell` 环境下运行 `curl` 的几个注意事项。
+
+先尝试获取所有乘客信息：
+
+```powershell
+curl -v localhost:8081/passengers
+```
+
+实测结果（成功）：
+
+![](../assets/18.8.png)
+
+再查用 `id` 查看单个乘客信息：
+
+```powershell
+curl -v localhost:8081/passengers/4
+```
+
+实测结果：
+
+![](../assets/18.9.png)
+
+接着尝试修改该乘客信息，调用端点 `PATCH /passengers/{id}`：
+
+```powershell
+curl -v -X PATCH localhost:8081/passengers/4 -H "Content-type:application/json" -d '{"name":"Sophia Jones", "country":"AU", "isRegistered":"true"}'
+```
+
+运行结果：
+
+![](../assets/18.10.png)
+
+接着删除该乘客：
+
+```powershell
+curl -v -X DELETE localhost:8081/passengers/4
+```
+
+运行结果：
+
+![](../assets/18.11.png)
+
+最后再新增一条乘客记录，使用 `POST /passengers` 端点：
+
+```powershell
+curl -v -X POST localhost:8081/passengers -H "Content-type:application/json" -d '{"name":"John Smith"}'
+```
+
+![](../assets/18.12.png)
+
+> [!tip]
+>
+> **实用技巧：在 PowerShell 中格式化 curl 命令**
+>
+> 上述 `curl` 命令虽然和书中效果相同，但都是 **单行命令**，无法像原书那样对较长命令进行换行或手动缩进：
+>
+> ![](../assets/18.13.png)
+>
+> 经实测，`PowerShell` 中的换行主要有以下几种情况：
+>
+> |         场景         |                             方法                             | 示例                     |
+> | :------------------: | :----------------------------------------------------------: | :----------------------- |
+> |    **管道符** 后     |                     紧跟管道符，回车换行                     | ![](../assets/18.16.png) |
+> |   **英文逗号** 后    |                      紧跟逗号，回车换行                      | ![](../assets/18.15.png) |
+> | **大括号 / 括号** 后 |                     紧跟左括号，回车换行                     | ![](../assets/18.17.png) |
+> |  **点号运算符** 后   |                    紧跟点运算符，回车换行                    | ![](../assets/18.14.png) |
+> |     **其他位置**     | 用 **反引号** <kbd>`</kbd> + <kbd>Shift</kbd><kbd>Enter</kbd> | ![](../assets/18.18.png) |
+>
+> 因此，格式化后的 `PATCH` 请求可以写作：
+>
+> ```powershell
+> curl -v -X PATCH localhost:8081/passengers/4 `
+>     -H "Content-Type: application/json"`
+>     -d '{
+>           "name": "Sophia Jones",
+>           "country": "AU",
+>           "isRegistered": "true"
+>        }'
+> ```
+>
+> 实测效果（红框部分为触发换行的地方）：
+>
+> ![](../assets/18.19.png)
+>
+> 最后，**混合使用单引号和双引号** 可以避免手动输入 `JSON` 内的大量转移符 `\`，也算一个提速小技巧吧。
+
+
+
+### 18.4.3 REST API 接口的测试
 
 
 
