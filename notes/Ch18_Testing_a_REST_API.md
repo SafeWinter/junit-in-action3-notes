@@ -443,13 +443,13 @@ curl -v -X POST localhost:8081/passengers -H "Content-type:application/json" -d 
 >
 > 经实测，`PowerShell` 中的换行主要有以下几种情况：
 >
-> |         场景         |                             方法                             | 示例                     |
-> | :------------------: | :----------------------------------------------------------: | :----------------------- |
-> |    **管道符** 后     |                     紧跟管道符，回车换行                     | ![](../assets/18.16.png) |
-> |   **英文逗号** 后    |                      紧跟逗号，回车换行                      | ![](../assets/18.15.png) |
-> | **大括号 / 括号** 后 |                     紧跟左括号，回车换行                     | ![](../assets/18.17.png) |
-> |  **点号运算符** 后   |                    紧跟点运算符，回车换行                    | ![](../assets/18.14.png) |
-> |     **其他位置**     | 用 **反引号** <kbd>`</kbd> + <kbd>Shift</kbd><kbd>Enter</kbd> | ![](../assets/18.18.png) |
+> |         场景         |                     方法                      | 示例                     |
+> | :------------------: | :-------------------------------------------: | :----------------------- |
+> |    **管道符** 后     |     紧跟管道符，按 <kbd>Enter</kbd> 换行      | ![](../assets/18.16.png) |
+> |   **英文逗号** 后    |      紧跟逗号，按 <kbd>Enter</kbd> 换行       | ![](../assets/18.15.png) |
+> | **大括号 / 括号** 后 |   紧跟 **左括号**，按 <kbd>Enter</kbd> 换行   | ![](../assets/18.17.png) |
+> |  **点号运算符** 后   |    紧跟点运算符，按 <kbd>Enter</kbd> 换行     | ![](../assets/18.14.png) |
+> |     **其他位置**     | 用 **反引号** <kbd>`</kbd> + <kbd>Enter</kbd> | ![](../assets/18.18.png) |
 >
 > 因此，格式化后的 `PATCH` 请求可以写作：
 >
@@ -473,7 +473,263 @@ curl -v -X POST localhost:8081/passengers -H "Content-type:application/json" -d 
 
 ### 18.4.3 REST API 接口的测试
 
+到这里才是全章的重点内容，不过作者是对照大段测试用例逐一解释的，很多地方并没有展开讲，有点小遗憾；我准备按不同的接口进行梳理，并结合实测情况补充必要内容。
 
+#### 1 GET 请求测试：查数据列表
+
+先来看 `GET /countries` 的测试。创建测试类 `RestApplicationTest`：
+
+```java
+@SpringBootTest
+@AutoConfigureMockMvc
+@Import(FlightBuilder.class)
+public class RestApplicationTest {
+
+    @Autowired
+    private MockMvc mvc;
+
+    @Autowired
+    private Map<String, Country> countriesMap;
+
+    @MockitoBean
+    private CountryRepository countryRepository;
+
+    @Test
+    void testGetAllCountries() throws Exception {
+        when(countryRepository.findAll()).thenReturn(new ArrayList<>(countriesMap.values()));
+        mvc.perform(get("/countries"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$", hasSize(3)));
+
+        verify(countryRepository, times(1)).findAll();
+    }
+}
+```
+
+可以看到，`REST API` 接口的测试总共分三步：
+
+- 利用依赖注入初始化相关参数；
+- 设置期望的状态；
+- 模拟执行并断言结果；
+
+其中，`MockMvc` 型依赖（`mvc`）是测试逻辑的主入口，其相关对象的自动配置是通过 `@AutoConfigureMockMvc` 注解启用的，并通过 `@MockitoBean` 注解具体注入（`L7`）。
+
+对于 `GET /countries` 端点，我们要验证的是：
+
+1. 状态码是否为 `200`；
+2. `Header` 里的 `Content-Type` 是否是 `JSON` 格式的；
+3. 总记录数是否正确。
+
+因此，需要先用 `when/thenReturn` 设置大的流程，再用 `mvc` 对象模拟调用一次端点，并用 `MockMvc` 常用的链式写法断言上述三个指标，最后调用 `verifiy()` 方法严格限定调用次数，正式启动模拟逻辑即可。
+
+这里比较有意思的是断言总记录数的相关写法：`jsonPath("$", hasSize(3))`。其中，第一个参数 `"$"` 表示要遍历的根节点（The root element to query）。这是一门用来读取 `JSON` 内容的 `Java` 专用 `DSL` 语言，全称叫 `Jayway JsonPath`，具体用法详见 [GitHub 官方文档](https://github.com/json-path/JsonPath)。
+
+本地实测结果：
+
+![](../assets/18.20.png)
+
+同理可测 `GET /passengers` 端点：
+
+```java
+@Autowired
+private Flight flight;
+
+@MockitoBean
+private PassengerRepository passengerRepository;
+
+@Test
+void testGetAllPassengers() throws Exception {
+    when(passengerRepository.findAll()).thenReturn(new ArrayList<>(flight.getPassengers()));
+
+    mvc.perform(get("/passengers"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$", hasSize(20)));
+
+    verify(passengerRepository, times(1)).findAll();
+}
+```
+
+可以看到，测试逻辑都是声明式的写法，无需死记硬背，真正要用的时候多写几遍就够了。
+
+实测截图：
+
+![](../assets/18.21.png)
+
+
+
+#### 2 GET 请求测试：查单个记录
+
+由于 `spring-boot-starter-data-jpa` 中查询单个记录用的是 `repository.findById(id).orElseThrow(...)`，因此除了考虑正常流程还得测一下查不到的异常情况。这里作者省略了太多内容，没有详细展开；本着实战精神，我再补充点内容。
+
+正常情况下，查单条记录应该写成：
+
+```java
+@Test
+void testFindPassengerById() throws Exception {
+    Passenger passenger = new Passenger("John Smith");
+    Country country = countriesMap.get("UK");
+    passenger.setCountry(country);
+    passenger.setIsRegistered(false);
+    when(passengerRepository.findById(1L)).thenReturn(Optional.of(passenger));
+    
+    mvc.perform(get("/passengers/1"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.name", is("John Smith")))
+            .andExpect(jsonPath("$.registered", is(Boolean.FALSE)))
+            .andExpect(jsonPath("$.country.name", is("United Kingdom")))
+            .andExpect(jsonPath("$.country.codeName", is("UK")));
+    
+    verify(passengerRepository, times(1)).findById(1L);
+}
+```
+
+运行肯定也是没问题的：
+
+![](../assets/18.23.png)
+
+但可能是后面还有个 `PATCH /passenger/{id}` 端口，里面也会调用 `findById()` 方法，因此上述正常情况就跳过了，直接补了一个抛异常的情况：
+
+```java
+@Test
+void testPassengerNotFound() {
+    Throwable throwable = assertThrows(NestedServletException.class, () -> 
+            mvc.perform(get("/passengers/30")).andExpect(status().isNotFound()));
+    assertEquals(PassengerNotFoundException.class, throwable.getCause().getClass());
+}
+
+// 自定义异常：
+public class PassengerNotFoundException extends RuntimeException {
+    public PassengerNotFoundException(Long id) {
+        super("Passenger id not found : " + id);
+    }
+}
+```
+
+上述用例写得很简洁，只是有点 **过于简洁** 了。按照刚才的套路，应该写成这样才对啊：
+
+```java
+@Test
+void testPassengerNotFound() {
+    Throwable throwable = assertThrows(ServletException.class, () -> {
+        when(passengerRepository.findById(30L)).thenThrow(PassengerNotFoundException.class);
+
+        mvc.perform(get("/passengers/30"))
+                .andExpect(status().isNotFound());
+
+        verify(passengerRepository, times(1)).findById(30L);
+    });
+    assertEquals(PassengerNotFoundException.class, throwable.getCause().getClass());
+}
+```
+
+为了一探究竟，我用调试模式跟踪了一下，结果发现测试逻辑执行到 `L6` 就中断返回了：
+
+![](../assets/18.22.png)
+
+我这才悟了：注定要抛的异常何必画蛇添足写个 `when()`？既然抛异常了何必再 `verify()` 手动验证一次执行？于是，就有了上面的简化版，一切都说得通了。
+
+
+
+#### 3 POST 请求测试
+
+有了前面两组用例热身，发送 `POST` 请求的用例简直不要太简单，标准的 `AAA` 模式（`Arrange-Act-Assert`，即准备-执行-验证）：
+
+```java
+@Test
+void testPostPassenger() throws Exception {
+    Passenger passenger = new Passenger("Peter Michelsen");
+    passenger.setCountry(countriesMap.get("US"));
+    passenger.setIsRegistered(false);
+    when(passengerRepository.save(passenger)).thenReturn(passenger);
+
+    mvc.perform(post("/passengers")
+            .content(new ObjectMapper().writeValueAsString(passenger))
+            .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON))
+            .andExpect(status().isCreated())
+            .andExpect(jsonPath("$.name", is("Peter Michelsen")))
+            .andExpect(jsonPath("$.country.codeName", is("US")))
+            .andExpect(jsonPath("$.country.name", is("USA")))
+            .andExpect(jsonPath("$.registered", is(Boolean.FALSE)));
+
+    verify(passengerRepository, times(1)).save(passenger);
+}
+```
+
+其实还是有不一样的地方，比如传入 `perform()` 方法的参数：
+
+```java
+MockHttpServletRequestBuilder mockRequest = post("/passengers")
+    .content(new ObjectMapper().writeValueAsString(passenger))
+    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON);
+```
+
+其中第 `L2` 行是利用了第三方库 `Jackson` 的标准接口将 `passenger` 转成了 `JSON` 字符串；而第三行的写法可以避免手动输错 `Header` 请求头。
+
+另外，示例代码并没有单独声明一个 `MockHttpServletRequestBuilder` 对象，而是直接放到了 `perform()` 中，这也是尽量使用声明式编程的考虑。
+
+至于状态码的断言，严格意义上的基于 `RESTful` 风格的 `POST` 请求其实不是 `200` 而是 `201`（`status().isCreated()`），该规范的时候还是不要遗漏这些细节。
+
+本地运行结果：
+
+![](../assets/18.24.png)
+
+
+
+#### 4 PATCH 请求测试
+
+根据 `REST API` 的说法，`PATCH` 请求就是打补丁用的，需要修改哪些字段就提交哪些，传统模式下生成的更新语句也是动态的才对，因此演示代码和测试用例都写得比其他端点多一些：
+
+```java
+@Test
+void testPatchPassenger() throws Exception {
+    Passenger passenger = new Passenger("Sophia Graham");
+    passenger.setCountry(countriesMap.get("UK"));
+    passenger.setIsRegistered(false);
+    when(passengerRepository.findById(1L)).thenReturn(Optional.of(passenger));
+    when(passengerRepository.save(passenger)).thenReturn(passenger);
+    String updates = "{\"name\":\"Sophia Jones\", \"country\":\"AU\", \"isRegistered\":\"true\"}";
+
+    mvc.perform(patch("/passengers/1")
+                    .content(updates)
+                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+            ).andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk());
+
+    verify(passengerRepository, times(1)).findById(1L);
+    verify(passengerRepository, times(1)).save(passenger);
+}
+```
+
+上述逻辑和 `POST` 类似，请求的 `BODY` 正文部分都需要用 `content()` 方法传 `JSON` 字符串。整个测试流程也是标准的 `AAA` 模式（强烈建议手敲一遍加深印象）。最终实测结果：
+
+![](../assets/18.25.png)
+
+
+
+#### 5 DELETE 请求测试
+
+最后的 `DELETE /passengers/{id}` 端点反而最简单，因为遵循幂等设计，不必单独考虑删除了不存在的乘客 `id` 的情况：
+
+```java
+@Test
+public void testDeletePassenger() throws Exception {
+    mvc.perform(delete("/passengers/4"))
+            .andExpect(status().isOk());
+
+    verify(passengerRepository, times(1)).deleteById(4L);
+}
+```
+
+这里用 `curl` 验证删除一个不存在的乘客更有说服力：
+
+![](../assets/18.26.png)
+
+最后，如果实在不放心，还可以在 `IDEA` 中导出测试报表查看乘客 `Controller` 中的测试用例的覆盖情况：
+
+![](../assets/18.27.png)
 
 
 
