@@ -54,7 +54,7 @@ Status available：:heavy_check_mark: (Completed) | :hourglass_flowing_sand: (Wo
 | Ch16 | [Testing Spring applications](./notes/Ch16_Testing_Spring_application.md) |    :heavy_check_mark:    |
 | Ch17 | [Testing Spring Boot applications](./notes/Ch17_Testing_Spring_Boot_applications.md) |    :heavy_check_mark:    |
 | Ch18 |   [Testing a REST API](./notes/Ch18_Testing_a_REST_API.md)   |    :heavy_check_mark:    |
-| Ch19 | [Testing database applications](./notes/Ch19_Testing_database_applications.md) |      :orange_book:       |
+| Ch19 | [Testing database applications](./notes/Ch19_Testing_database_applications.md) |    :heavy_check_mark:    |
 |      |       **Part V Developing applications with JUnit 5**        |                          |
 | Ch20 | [Test-driven development with JUnit 5](./notes/Ch20_TDD_with_JUnit5.md) |      :orange_book:       |
 | Ch21 | [Behavior-driven development with JUnit 5](./notes/Ch21_BDD_with_JUnit5.md) | :hourglass_flowing_sand: |
