@@ -22,6 +22,8 @@
 
 > *TDD helps you to pay attention to the right issues at the right time so you can make your designs cleaner, you can refine your designs as you learn. TDD enables you to gain confidence in the code over time.*
 > 测试驱动开发（`TDD`）有助于在正确的时间关注正确的问题，从而使设计更加清晰，并能在学习过程中不断优化设计。随着时间的推移 `TDD` 能让开发者建立起对代码的信心。
+>
+> —— **Kent Beck**
 
 本章没有堆砌 `TDD` 的观点理论，而是真正从实战角度出发，手把手地带领大家见识见识，究竟什么才是真正的测试驱动开发流程。
 
@@ -745,8 +747,10 @@ public abstract class Flight {
 
 ![](../assets/20.18.png)
 
-> [!tip]
+> [!note]
 >
-> 实测时发现，添加去重功能很容易止步于在每个子类的 `addPassenger()` 方法内添加重复校验逻辑，而不会想到统一修改基类属性 `passengers` 的类型。按照三次法则的建议，就算像这样手动修改了三次，最后也要主动思考如何重构上述代码，尽可能减少代码冗余。
+> **注意**
+>
+> 实测时发现，添加去重功能很容易止步于在每个子类的 `addPassenger()` 方法内添加重复校验逻辑，而不会想到统一修改基类属性 `passengers` 的类型。按照三次法则的建议，就算像这样手动修改了三次，最后也应该主动思考如何重构上述逻辑，尽可能减少代码冗余。
 >
 > 通过一定的练习，最终达到透过现象看本质的目的。
