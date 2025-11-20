@@ -474,6 +474,12 @@ class PassengerTest {
 
 ![](../assets/22.4.png)
 
+> [!note]
+>
+> **备忘录**
+>
+> 本章随书源码分了 6 个文件夹演示不同阶段的测试情况（`Phase1`、`Phase2` … `Phase6`），实测时最好分别导入 `IDEA`，否则最后生成的覆盖率报表页会因为每个文件夹都使用了同一个包路（`com.manning.junitbook.testpyramid.airport`）而混入其他无关的类（如 `Phase3` 才引入的 `DistancesManager` 很可能混入 `Phase1` 和 `Phase2` 中，直接原因是 `IDEA` 的启动配置默认是按包路执行测试的）。
+
 
 
 ## 22.5 演示二：集成测试
