@@ -3,10 +3,10 @@
     http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.manning.junitbook</groupId>
-    <artifactId>ch21-bdd</artifactId>
+    <artifactId>ch21-bdd3</artifactId>
     <packaging>jar</packaging>
     <version>1.0-SNAPSHOT</version>
-    <name>ch21-bdd</name>
+    <name>ch21-bdd3</name>
     <url>http://maven.apache.org</url>
 
     <build>

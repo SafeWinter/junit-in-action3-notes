@@ -30,13 +30,12 @@ public class Passenger {
     private String identifier;
     private String name;
     private String countryCode;
-    private String ssnRegex = "^(?!000|666)[0-8][0-9]{2}-(?!00)[0-9]{2}-(?!0000)[0-9]{4}$";
-    private String nonUsIdentifierRegex = "^(?!000|666)[9][0-9]{2}-(?!00)[0-9]{2}-(?!0000)[0-9]{4}$";
-    private Pattern pattern;
-
+    private final Pattern pattern;
 
     public Passenger(String identifier, String name, String countryCode) {
-		pattern = countryCode.equals("US") ? Pattern.compile(ssnRegex) : Pattern.compile(nonUsIdentifierRegex);
+        String ssnRegex = "^(?!000|666)[0-8][0-9]{2}-(?!00)[0-9]{2}-(?!0000)[0-9]{4}$";
+        String nonUsIdentifierRegex = "^(?!000|666)9[0-9]{2}-(?!00)[0-9]{2}-(?!0000)[0-9]{4}$";
+        pattern = countryCode.equals("US") ? Pattern.compile(ssnRegex) : Pattern.compile(nonUsIdentifierRegex);
         Matcher matcher = pattern.matcher(identifier);
         if (!matcher.matches()) {
             throw new RuntimeException("Invalid identifier");

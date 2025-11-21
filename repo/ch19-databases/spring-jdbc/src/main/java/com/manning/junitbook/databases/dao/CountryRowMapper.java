@@ -33,7 +33,6 @@ public class CountryRowMapper implements RowMapper<Country> {
 
     @Override
     public Country mapRow(ResultSet resultSet, int i) throws SQLException {
-        Country country = new Country(resultSet.getString(NAME), resultSet.getString(CODE_NAME));
-        return country;
+        return new Country(resultSet.getString(NAME), resultSet.getString(CODE_NAME));
     }
 }

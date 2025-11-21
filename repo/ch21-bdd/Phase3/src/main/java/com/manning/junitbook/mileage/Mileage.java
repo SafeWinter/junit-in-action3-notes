@@ -31,8 +31,8 @@ public class Mileage {
     public static final int VIP_FACTOR = 10;
     public static final int REGULAR_FACTOR = 20;
 
-    private Map<Passenger, Integer> passengersMileageMap = new HashMap<>();
-    private Map<Passenger, Integer> passengersPointsMap = new HashMap<>();
+    private final Map<Passenger, Integer> passengersMileageMap = new HashMap<>();
+    private final Map<Passenger, Integer> passengersPointsMap = new HashMap<>();
 
     public Map<Passenger, Integer> getPassengersPointsMap() {
         return Collections.unmodifiableMap(passengersPointsMap);

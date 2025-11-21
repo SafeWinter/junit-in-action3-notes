@@ -3,10 +3,10 @@
     http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.manning.junitbook.testpyramid</groupId>
-    <artifactId>testpyramid</artifactId>
+    <artifactId>testpyramid1</artifactId>
     <packaging>jar</packaging>
     <version>1.0-SNAPSHOT</version>
-    <name>testpyramid</name>
+    <name>testpyramid1</name>
     <url>http://maven.apache.org</url>
 
     <build>

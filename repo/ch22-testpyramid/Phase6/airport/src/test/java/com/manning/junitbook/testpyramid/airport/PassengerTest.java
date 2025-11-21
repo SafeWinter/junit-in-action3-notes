@@ -37,21 +37,15 @@ public class PassengerTest {
     @Test
     public void testCreatePassengerWithInvalidSsn() {
         assertThrows(RuntimeException.class,
-                () -> {
-                    Passenger passenger = new Passenger("123-456-789", "John Smith", "US");
-                });
+                () -> new Passenger("123-456-789", "John Smith", "US"));
         assertThrows(RuntimeException.class,
-                () -> {
-                    Passenger passenger = new Passenger("900-45-6789", "John Smith", "US");
-                });
+                () -> new Passenger("900-45-6789", "John Smith", "US"));
     }
 
     @Test
     public void testCreatePassengerWithInvalidCountryCode() {
         assertThrows(RuntimeException.class,
-                () -> {
-                    Passenger passenger = new Passenger("900-45-6789", "John Smith", "GJ");
-                });
+                () -> new Passenger("900-45-6789", "John Smith", "GJ"));
     }
 
     @Test

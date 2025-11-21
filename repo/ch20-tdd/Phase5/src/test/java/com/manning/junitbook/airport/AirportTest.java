@@ -23,6 +23,8 @@ package com.manning.junitbook.airport;
 import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;
+import java.util.Set;
+import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -46,30 +48,30 @@ public class AirportTest {
         @Nested
         @DisplayName("When we have a regular passenger")
         class RegularPassenger {
-
             @Test
-            @DisplayName("Then you can add and remove him from an economy flight")
+            @DisplayName("Then you cannot add or remove him from a business flight")
             public void testEconomyFlightRegularPassenger() {
+                final Set<Passenger> passengers = economyFlight.getPassengersSet();
                 assertAll("Verify all conditions for a regular passenger and an economy flight",
                         () -> assertEquals("1", economyFlight.getId()),
-                        () -> assertEquals(true, economyFlight.addPassenger(mike)),
-                        () -> assertEquals(1, economyFlight.getPassengersSet().size()),
-                        () -> assertEquals("Mike", new ArrayList<>(economyFlight.getPassengersSet()).get(0).getName()),
-                        () -> assertEquals(true, economyFlight.removePassenger(mike)),
-                        () -> assertEquals(0, economyFlight.getPassengersSet().size())
-                );
+                        () -> assertTrue(economyFlight.addPassenger(mike)),
+                        () -> assertEquals(1, passengers.size()),
+                        () -> assertEquals("Mike", new ArrayList<>(passengers).get(0).getName()),
+
+                        () -> assertTrue(economyFlight.removePassenger(mike)),
+                        () -> assertEquals(0, passengers.size()));
             }
 
             @DisplayName("Then you cannot add him to an economy flight more than once")
             @RepeatedTest(5)
             public void testEconomyFlightRegularPassengerAddedOnlyOnce(RepetitionInfo repetitionInfo) {
-                for (int i = 0; i < repetitionInfo.getCurrentRepetition(); i++) {
-                    economyFlight.addPassenger(mike);
-                }
+                IntStream.range(0, repetitionInfo.getTotalRepetitions())
+                        .forEach(i -> economyFlight.addPassenger(mike));
+                final Set<Passenger> passengers = economyFlight.getPassengersSet();
                 assertAll("Verify a regular passenger can be added to an economy flight only once",
-                        () -> assertEquals(1, economyFlight.getPassengersSet().size()),
-                        () -> assertTrue(economyFlight.getPassengersSet().contains(mike)),
-                        () -> assertTrue(new ArrayList<>(economyFlight.getPassengersSet()).get(0).getName().equals("Mike"))
+                        () -> assertEquals(1, passengers.size()),
+                        () -> assertTrue(passengers.contains(mike)),
+                        () -> assertEquals("Mike", new ArrayList<>(passengers).get(0).getName())
                 );
             }
         }
@@ -77,29 +79,31 @@ public class AirportTest {
         @Nested
         @DisplayName("When we have a VIP passenger")
         class VipPassenger {
+
             @Test
             @DisplayName("Then you can add him but cannot remove him from an economy flight")
             public void testEconomyFlightVipPassenger() {
+                final Set<Passenger> passengers = economyFlight.getPassengersSet();
                 assertAll("Verify all conditions for a VIP passenger and an economy flight",
                         () -> assertEquals("1", economyFlight.getId()),
-                        () -> assertEquals(true, economyFlight.addPassenger(james)),
-                        () -> assertEquals(1, economyFlight.getPassengersSet().size()),
-                        () -> assertEquals("James", new ArrayList<>(economyFlight.getPassengersSet()).get(0).getName()),
-                        () -> assertEquals(false, economyFlight.removePassenger(james)),
-                        () -> assertEquals(1, economyFlight.getPassengersSet().size())
-                );
+                        () -> assertTrue(economyFlight.addPassenger(james)),
+                        () -> assertEquals(1, passengers.size()),
+                        () -> assertEquals("James", new ArrayList<>(passengers).get(0).getName()),
+
+                        () -> assertFalse(economyFlight.removePassenger(james)),
+                        () -> assertEquals(1, passengers.size()));
             }
 
             @DisplayName("Then you cannot add him to an economy flight more than once")
             @RepeatedTest(5)
             public void testEconomyFlightVipPassengerAddedOnlyOnce(RepetitionInfo repetitionInfo) {
-                for (int i = 0; i < repetitionInfo.getCurrentRepetition(); i++) {
-                    economyFlight.addPassenger(james);
-                }
+                IntStream.range(0, repetitionInfo.getTotalRepetitions())
+                        .forEach(i -> economyFlight.addPassenger(james));
+                final Set<Passenger> passengers = economyFlight.getPassengersSet();
                 assertAll("Verify a VIP passenger can be added to an economy flight only once",
-                        () -> assertEquals(1, economyFlight.getPassengersSet().size()),
-                        () -> assertTrue(economyFlight.getPassengersSet().contains(james)),
-                        () -> assertTrue(new ArrayList<>(economyFlight.getPassengersSet()).get(0).getName().equals("James"))
+                        () -> assertEquals(1, passengers.size()),
+                        () -> assertTrue(passengers.contains(james)),
+                        () -> assertEquals("James", new ArrayList<>(passengers).get(0).getName())
                 );
             }
         }
@@ -122,51 +126,49 @@ public class AirportTest {
         @Nested
         @DisplayName("When we have a regular passenger")
         class RegularPassenger {
-
             @Test
             @DisplayName("Then you cannot add or remove him from a business flight")
             public void testBusinessFlightRegularPassenger() {
-                assertAll("Verify all conditions for a regular passenger and a business flight",
-                        () -> assertEquals(false, businessFlight.addPassenger(mike)),
-                        () -> assertEquals(0, businessFlight.getPassengersSet().size()),
-                        () -> assertEquals(false, businessFlight.removePassenger(mike)),
-                        () -> assertEquals(0, businessFlight.getPassengersSet().size())
-                );
+                final Set<Passenger> passengers = businessFlight.getPassengersSet();
+                assertAll("",
+                        () -> assertFalse(businessFlight.addPassenger(mike)),
+                        () -> assertEquals(0, passengers.size()),
+                        () -> assertFalse(businessFlight.removePassenger(mike)),
+                        () -> assertEquals(0, passengers.size()));
             }
         }
 
         @Nested
         @DisplayName("When we have a VIP passenger")
         class VipPassenger {
-
             @Test
             @DisplayName("Then you can add him but cannot remove him from a business flight")
             public void testBusinessFlightVipPassenger() {
-                assertAll("Verify all conditions for a VIP passenger and a business flight",
-                        () -> assertEquals(true, businessFlight.addPassenger(james)),
-                        () -> assertEquals(1, businessFlight.getPassengersSet().size()),
-                        () -> assertEquals(false, businessFlight.removePassenger(james)),
-                        () -> assertEquals(1, businessFlight.getPassengersSet().size())
-                );
+                final Set<Passenger> passengers = businessFlight.getPassengersSet();
+                assertAll("",
+                        () -> assertTrue(businessFlight.addPassenger(james)),
+                        () -> assertEquals(1, passengers.size()),
+                        () -> assertFalse(businessFlight.removePassenger(james)),
+                        () -> assertEquals(1, passengers.size()));
             }
 
             @DisplayName("Then you cannot add him to a business flight more than once")
             @RepeatedTest(5)
             public void testBusinessFlightVipPassengerAddedOnlyOnce(RepetitionInfo repetitionInfo) {
-                for (int i = 0; i < repetitionInfo.getCurrentRepetition(); i++) {
-                    businessFlight.addPassenger(james);
-                }
+                IntStream.range(0, repetitionInfo.getTotalRepetitions())
+                        .forEach(i -> businessFlight.addPassenger(james));
+                final Set<Passenger> passengers = businessFlight.getPassengersSet();
                 assertAll("Verify a VIP passenger can be added to a business flight only once",
-                        () -> assertEquals(1, businessFlight.getPassengersSet().size()),
-                        () -> assertTrue(businessFlight.getPassengersSet().contains(james)),
-                        () -> assertTrue(new ArrayList<>(businessFlight.getPassengersSet()).get(0).getName().equals("James"))
+                        () -> assertEquals(1, passengers.size()),
+                        () -> assertTrue(passengers.contains(james)),
+                        () -> assertEquals("James", new ArrayList<>(passengers).get(0).getName())
                 );
             }
         }
     }
 
-    @DisplayName("Given there is a premium flight")
     @Nested
+    @DisplayName("Given there is a premium flight")
     class PremiumFlightTest {
         private Flight premiumFlight;
         private Passenger mike;
@@ -182,47 +184,44 @@ public class AirportTest {
         @Nested
         @DisplayName("When we have a regular passenger")
         class RegularPassenger {
-
             @Test
             @DisplayName("Then you cannot add or remove him from a premium flight")
             public void testPremiumFlightRegularPassenger() {
+                final Set<Passenger> passengers = premiumFlight.getPassengersSet();
                 assertAll("Verify all conditions for a regular passenger and a premium flight",
-                        () -> assertEquals(false, premiumFlight.addPassenger(mike)),
-                        () -> assertEquals(0, premiumFlight.getPassengersSet().size()),
-                        () -> assertEquals(false, premiumFlight.removePassenger(mike)),
-                        () -> assertEquals(0, premiumFlight.getPassengersSet().size())
-                );
+                        () -> assertFalse(premiumFlight.addPassenger(mike)),
+                        () -> assertEquals(0, passengers.size()),
+                        () -> assertFalse(premiumFlight.removePassenger(mike)),
+                        () -> assertEquals(0, passengers.size()));
             }
         }
 
         @Nested
         @DisplayName("When we have a VIP passenger")
         class VipPassenger {
-
             @Test
-            @DisplayName("Then you can add and remove him from a premium flight")
+            @DisplayName("Verify all conditions for a VIP passenger and a premium flight")
             public void testPremiumFlightVipPassenger() {
+                final Set<Passenger> passengers = premiumFlight.getPassengersSet();
                 assertAll("Verify all conditions for a VIP passenger and a premium flight",
-                        () -> assertEquals(true, premiumFlight.addPassenger(james)),
-                        () -> assertEquals(1, premiumFlight.getPassengersSet().size()),
-                        () -> assertEquals(true, premiumFlight.removePassenger(james)),
-                        () -> assertEquals(0, premiumFlight.getPassengersSet().size())
-                );
+                        () -> assertTrue(premiumFlight.addPassenger(james)),
+                        () -> assertEquals(1, passengers.size()),
+                        () -> assertTrue(premiumFlight.removePassenger(james)),
+                        () -> assertEquals(0, passengers.size()));
             }
 
             @DisplayName("Then you cannot add him to a premium flight more than once")
             @RepeatedTest(5)
             public void testPremiumFlightVipPassengerAddedOnlyOnce(RepetitionInfo repetitionInfo) {
-                for (int i = 0; i < repetitionInfo.getCurrentRepetition(); i++) {
-                    premiumFlight.addPassenger(james);
-                }
+                IntStream.range(0, repetitionInfo.getTotalRepetitions())
+                        .forEach(i -> premiumFlight.addPassenger(james));
+                final Set<Passenger> passengers = premiumFlight.getPassengersSet();
                 assertAll("Verify a VIP passenger can be added to a premium flight only once",
-                        () -> assertEquals(1, premiumFlight.getPassengersSet().size()),
-                        () -> assertTrue(premiumFlight.getPassengersSet().contains(james)),
-                        () -> assertTrue(new ArrayList<>(premiumFlight.getPassengersSet()).get(0).getName().equals("James"))
+                        () -> assertEquals(1, passengers.size()),
+                        () -> assertTrue(passengers.contains(james)),
+                        () -> assertEquals("James", new ArrayList<>(passengers).get(0).getName())
                 );
             }
         }
     }
 }
-

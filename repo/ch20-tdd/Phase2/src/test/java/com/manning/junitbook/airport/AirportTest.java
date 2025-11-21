@@ -25,7 +25,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class AirportTest {
 
@@ -45,11 +45,11 @@ public class AirportTest {
             Passenger mike = new Passenger("Mike", false);
 
             assertEquals("1", economyFlight.getId());
-            assertEquals(true, economyFlight.addPassenger(mike));
+            assertTrue(economyFlight.addPassenger(mike));
             assertEquals(1, economyFlight.getPassengers().size());
             assertEquals("Mike", economyFlight.getPassengers().get(0).getName());
 
-            assertEquals(true, economyFlight.removePassenger(mike));
+            assertTrue(economyFlight.removePassenger(mike));
             assertEquals(0, economyFlight.getPassengers().size());
         }
 
@@ -58,11 +58,11 @@ public class AirportTest {
             Passenger james = new Passenger("James", true);
 
             assertEquals("1", economyFlight.getId());
-            assertEquals(true, economyFlight.addPassenger(james));
+            assertTrue(economyFlight.addPassenger(james));
             assertEquals(1, economyFlight.getPassengers().size());
             assertEquals("James", economyFlight.getPassengers().get(0).getName());
 
-            assertEquals(false, economyFlight.removePassenger(james));
+            assertFalse(economyFlight.removePassenger(james));
             assertEquals(1, economyFlight.getPassengers().size());
         }
 
@@ -82,9 +82,9 @@ public class AirportTest {
         public void testBusinessFlightRegularPassenger() {
             Passenger mike = new Passenger("Mike", false);
 
-            assertEquals(false, businessFlight.addPassenger(mike));
+            assertFalse(businessFlight.addPassenger(mike));
             assertEquals(0, businessFlight.getPassengers().size());
-            assertEquals(false, businessFlight.removePassenger(mike));
+            assertFalse(businessFlight.removePassenger(mike));
             assertEquals(0, businessFlight.getPassengers().size());
 
         }
@@ -93,9 +93,9 @@ public class AirportTest {
         public void testBusinessFlightVipPassenger() {
             Passenger james = new Passenger("James", true);
 
-            assertEquals(true, businessFlight.addPassenger(james));
+            assertTrue(businessFlight.addPassenger(james));
             assertEquals(1, businessFlight.getPassengers().size());
-            assertEquals(false, businessFlight.removePassenger(james));
+            assertFalse(businessFlight.removePassenger(james));
             assertEquals(1, businessFlight.getPassengers().size());
 
         }

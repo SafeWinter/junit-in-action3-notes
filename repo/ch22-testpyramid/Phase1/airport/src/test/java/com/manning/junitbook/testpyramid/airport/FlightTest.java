@@ -22,32 +22,26 @@ package com.manning.junitbook.testpyramid.airport;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class FlightTest {
+class FlightTest {
 
     @Test
-    public void testFlightCreation() {
+    void testFlightCreation() {
         Flight flight = new Flight("AA123", 100);
         assertNotNull(flight);
     }
 
     @Test
-    public void testInvalidFlightNumber() {
+    void testInvalidFlightNumber() {
         assertThrows(RuntimeException.class,
-                () -> {
-                    Flight flight = new Flight("AA12", 100);
-                });
+                () -> new Flight("AA12", 100));
         assertThrows(RuntimeException.class,
-                () -> {
-                    Flight flight = new Flight("AA12345", 100);
-                });
+                () -> new Flight("AA12345", 100));
     }
 
     @Test
-    public void testValidFlightNumber() {
+    void testValidFlightNumber() {
         Flight flight = new Flight("AA345", 100);
         assertNotNull(flight);
         flight = new Flight("AA3456", 100);
@@ -55,7 +49,7 @@ public class FlightTest {
     }
 
     @Test
-    public void testAddPassengers() {
+    void testAddPassengers() {
         Flight flight = new Flight("AA1234", 50);
         flight.setOrigin("London");
         flight.setDestination("Bucharest");
@@ -63,15 +57,11 @@ public class FlightTest {
             flight.addPassenger();
         }
         assertEquals(50, flight.getPassengers());
-        assertThrows(RuntimeException.class,
-                () -> {
-                    flight.addPassenger();
-                });
-
+        assertThrows(RuntimeException.class, flight::addPassenger);
     }
 
     @Test
-    public void testSetInvalidSeats() {
+    void testSetInvalidSeats() {
         Flight flight = new Flight("AA1234", 50);
         flight.setOrigin("London");
         flight.setDestination("Bucharest");
@@ -79,14 +69,11 @@ public class FlightTest {
             flight.addPassenger();
         }
         assertEquals(50, flight.getPassengers());
-        assertThrows(RuntimeException.class,
-                () -> {
-                    flight.setSeats(49);
-                });
+        assertThrows(RuntimeException.class, () -> flight.setSeats(49));
     }
 
     @Test
-    public void testSetValidSeats() {
+    void testSetValidSeats() {
         Flight flight = new Flight("AA1234", 50);
         flight.setOrigin("London");
         flight.setDestination("Bucharest");
@@ -99,44 +86,38 @@ public class FlightTest {
     }
 
     @Test
-    public void testChangeOrigin() {
+    void testChangeOrigin() {
         Flight flight = new Flight("AA1234", 50);
         flight.setOrigin("London");
         flight.setDestination("Bucharest");
         flight.takeOff();
-        assertEquals(true, flight.isFlying());
-        assertEquals(true, flight.isTakenOff());
-        assertEquals(false, flight.isLanded());
-        assertThrows(RuntimeException.class,
-                () -> {
-                    flight.setOrigin("Manchester");
-                });
+        assertTrue(flight.isFlying());
+        assertTrue(flight.isTakenOff());
+        assertFalse(flight.isLanded());
+        assertThrows(RuntimeException.class, () -> flight.setOrigin("Manchester"));
     }
 
     @Test
-    public void testLand() {
+    void testLand() {
         Flight flight = new Flight("AA1234", 50);
         flight.setOrigin("London");
         flight.setDestination("Bucharest");
         flight.takeOff();
-        assertEquals(true, flight.isTakenOff());
-        assertEquals(false, flight.isLanded());
+        assertTrue(flight.isTakenOff());
+        assertFalse(flight.isLanded());
         flight.land();
-        assertEquals(true, flight.isTakenOff());
-        assertEquals(true, flight.isLanded());
-        assertEquals(false, flight.isFlying());
+        assertTrue(flight.isTakenOff());
+        assertTrue(flight.isLanded());
+        assertFalse(flight.isFlying());
     }
 
     @Test
-    public void testChangeDestination() {
+    void testChangeDestination() {
         Flight flight = new Flight("AA1234", 50);
         flight.setOrigin("London");
         flight.setDestination("Bucharest");
         flight.takeOff();
         flight.land();
-        assertThrows(RuntimeException.class,
-                () -> {
-                    flight.setDestination("Sibiu");
-                });
+        assertThrows(RuntimeException.class, () -> flight.setDestination("Sibiu"));
     }
 }

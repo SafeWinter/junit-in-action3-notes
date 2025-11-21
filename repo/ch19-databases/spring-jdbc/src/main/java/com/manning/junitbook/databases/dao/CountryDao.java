@@ -22,7 +22,6 @@ package com.manning.junitbook.databases.dao;
 
 import java.util.List;
 
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -37,9 +36,8 @@ public class CountryDao extends JdbcDaoSupport {
     private static final CountryRowMapper COUNTRY_ROW_MAPPER = new CountryRowMapper();
 
     public List<Country> getCountryList() {
-        List<Country> countryList = getJdbcTemplate().query(GET_ALL_COUNTRIES_SQL, COUNTRY_ROW_MAPPER);
 
-        return countryList;
+        return getJdbcTemplate().query(GET_ALL_COUNTRIES_SQL, COUNTRY_ROW_MAPPER);
     }
 
     public List<Country> getCountryListStartWith(String name) {

@@ -36,7 +36,6 @@ import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
 import javax.inject.Inject;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -62,7 +61,7 @@ public class FlightWithPassengersTest {
     @Rule
     public MockitoRule mockitoRule = MockitoJUnit.rule();
 
-    private static Map<Passenger, Integer> passengersPointsMap = new HashMap<>();
+    private static final Map<Passenger, Integer> passengersPointsMap = new HashMap<>();
 
     @BeforeClass
     public static void setUp() {
@@ -72,13 +71,13 @@ public class FlightWithPassengersTest {
     }
 
     @Test(expected = RuntimeException.class)
-    public void testNumberOfSeatsCannotBeExceeded() throws IOException {
+    public void testNumberOfSeatsCannotBeExceeded() {
         assertEquals(50, flight.getPassengersNumber());
         flight.addPassenger(new Passenger("124-56-7890", "Michael Johnson", "US"));
     }
 
     @Test
-    public void testAddRemovePassengers() throws IOException {
+    public void testAddRemovePassengers() {
         flight.setSeats(51);
         Passenger additionalPassenger = new Passenger("124-56-7890", "Michael Johnson", "US");
         flight.addPassenger(additionalPassenger);

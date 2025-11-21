@@ -27,7 +27,7 @@ import java.util.regex.Pattern;
 
 public class Flight {
 
-	private String flightNumber;
+	private final String flightNumber;
     private int seats;
 	private String origin;
     private String destination;
@@ -36,10 +36,8 @@ public class Flight {
     private boolean landed;
     Set<Passenger> passengers = new HashSet<>();
 
-    private String flightNumberRegex = "^[A-Z]{2}\\d{3,4}$";
-    private Pattern pattern = Pattern.compile(flightNumberRegex);
-
-	public Flight(String flightNumber, int seats) {
+    public Flight(String flightNumber, int seats) {
+        Pattern pattern = Pattern.compile("^[A-Z]{2}\\d{3,4}$");
         Matcher matcher = pattern.matcher(flightNumber);
         if(!matcher.matches()) {
             throw new RuntimeException("Invalid flight number");

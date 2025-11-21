@@ -31,7 +31,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import javax.inject.Inject;
-import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
 
@@ -45,28 +44,28 @@ public class FlightWithPassengersTest {
     }
 
     @Inject
-    @FlightNumber(number = "AA1234")
+    @FlightNumber
     Flight flight;
 
     @Inject
-    @FlightNumber(number = "AA1235")
+    @FlightNumber("AA1235")
     Flight flight2;
 
     @Inject
-    @FlightNumber(number = "AA1236")
+    @FlightNumber("AA1236")
     Flight flight3;
 
     @Inject
     DistancesManager distancesManager;
 
     @Test(expected = RuntimeException.class)
-    public void testNumberOfSeatsCannotBeExceeded() throws IOException {
+    public void testNumberOfSeatsCannotBeExceeded() {
         assertEquals(50, flight.getPassengersNumber());
         flight.addPassenger(new Passenger("124-56-7890", "Michael Johnson", "US"));
     }
 
     @Test
-    public void testAddRemovePassengers() throws IOException {
+    public void testAddRemovePassengers() {
         flight.setSeats(51);
         Passenger additionalPassenger = new Passenger("124-56-7890", "Michael Johnson", "US");
         flight.addPassenger(additionalPassenger);

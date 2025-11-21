@@ -6,7 +6,7 @@
 	<artifactId>ch20-tdd</artifactId>
 	<packaging>jar</packaging>
 	<version>1.0-SNAPSHOT</version>
-	<name>ch20-tdd</name>
+	<name>ch20-tdd4</name>
 	<url>http://maven.apache.org</url>
 
 	<build>

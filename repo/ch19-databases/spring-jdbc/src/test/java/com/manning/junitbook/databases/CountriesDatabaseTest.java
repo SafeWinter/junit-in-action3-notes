@@ -47,7 +47,7 @@ public class CountriesDatabaseTest {
     @Autowired
     private CountriesLoader countriesLoader;
 
-    private List<Country> expectedCountryList = new ArrayList<Country>();
+    private final List<Country> expectedCountryList = new ArrayList<>();
     private List<Country> expectedCountryListStartsWithA = new ArrayList<Country>();
 
     @BeforeEach

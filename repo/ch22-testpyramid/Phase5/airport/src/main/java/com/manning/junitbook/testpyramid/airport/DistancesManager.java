@@ -27,8 +27,8 @@ import java.util.Map;
 public class DistancesManager {
     private static final int DISTANCE_FACTOR = 10;
 
-    private Map<Passenger, Integer> passengersDistancesMap = new HashMap<>();
-    private Map<Passenger, Integer> passengersPointsMap = new HashMap<>();
+    private final Map<Passenger, Integer> passengersDistancesMap = new HashMap<>();
+    private final Map<Passenger, Integer> passengersPointsMap = new HashMap<>();
 
     public Map<Passenger, Integer> getPassengersDistancesMap() {
         return Collections.unmodifiableMap(passengersDistancesMap);

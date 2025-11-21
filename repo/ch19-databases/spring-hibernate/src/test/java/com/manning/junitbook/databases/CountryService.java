@@ -39,8 +39,7 @@ public class CountryService {
 
     @Transactional
     public void init() {
-        for (int i = 0; i < COUNTRY_INIT_DATA.length; i++) {
-            String[] countryInitData = COUNTRY_INIT_DATA[i];
+        for (String[] countryInitData : COUNTRY_INIT_DATA) {
             Country country = new Country(countryInitData[0], countryInitData[1]);
             em.persist(country);
         }

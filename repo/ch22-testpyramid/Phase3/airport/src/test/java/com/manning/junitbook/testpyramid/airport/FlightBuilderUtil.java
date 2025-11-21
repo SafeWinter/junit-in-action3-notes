@@ -33,11 +33,11 @@ public class FlightBuilderUtil {
         flight.setDistance(2100);
 
         try(BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
-            String line = null;
+            String line;
             do {
                 line = reader.readLine();
                 if (line != null) {
-                    String[] passengerString = line.toString().split(";");
+                    String[] passengerString = line.split(";");
                     Passenger passenger = new Passenger(passengerString[0].trim(), passengerString[1].trim(), passengerString[2].trim());
                     flight.addPassenger(passenger);
                 }

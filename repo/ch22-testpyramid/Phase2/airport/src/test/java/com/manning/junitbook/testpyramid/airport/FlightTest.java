@@ -24,9 +24,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class FlightTest {
 
@@ -39,13 +37,9 @@ public class FlightTest {
     @Test
     public void testInvalidFlightNumber() {
         assertThrows(RuntimeException.class,
-                ()->{
-                    Flight flight = new Flight("AA12", 100);
-                });
+                () -> new Flight("AA12", 100));
         assertThrows(RuntimeException.class,
-                ()->{
-                    Flight flight = new Flight("AA12345", 100);
-                });
+                ()-> new Flight("AA12345", 100));
     }
 
     @Test
@@ -60,10 +54,8 @@ public class FlightTest {
     public void testAddPassengers() throws IOException {
         Flight flight = FlightBuilderUtil.buildFlightFromCsv();
         assertEquals(50, flight.getPassengersNumber());
-        assertThrows(RuntimeException.class,
-                ()->{
-                    flight.addPassenger(new Passenger("124-56-7890", "Michael Johnson", "US"));
-                });
+        assertThrows(RuntimeException.class, ()-> flight.addPassenger(
+                new Passenger("124-56-7890", "Michael Johnson", "US")));
     }
 
     @Test
@@ -82,10 +74,7 @@ public class FlightTest {
     public void testSetInvalidSeats() throws IOException {
         Flight flight = FlightBuilderUtil.buildFlightFromCsv();
         assertEquals(50, flight.getPassengersNumber());
-        assertThrows(RuntimeException.class,
-                ()->{
-                    flight.setSeats(49);
-                });
+        assertThrows(RuntimeException.class, () -> flight.setSeats(49));
     }
 
     @Test
@@ -102,13 +91,10 @@ public class FlightTest {
         flight.setOrigin("London");
         flight.setDestination("Bucharest");
         flight.takeOff();
-        assertEquals(true, flight.isFlying());
-        assertEquals(true, flight.isTakenOff());
-        assertEquals(false, flight.isLanded());
-        assertThrows(RuntimeException.class,
-                ()->{
-                    flight.setOrigin("Manchester");
-                });
+        assertTrue(flight.isFlying());
+        assertTrue(flight.isTakenOff());
+        assertFalse(flight.isLanded());
+        assertThrows(RuntimeException.class, () -> flight.setOrigin("Manchester"));
     }
 
     @Test
@@ -117,12 +103,12 @@ public class FlightTest {
         flight.setOrigin("London");
         flight.setDestination("Bucharest");
         flight.takeOff();
-        assertEquals(true, flight.isTakenOff());
-        assertEquals(false, flight.isLanded());
+        assertTrue(flight.isTakenOff());
+        assertFalse(flight.isLanded());
         flight.land();
-        assertEquals(true, flight.isTakenOff());
-        assertEquals(true, flight.isLanded());
-        assertEquals(false, flight.isFlying());
+        assertTrue(flight.isTakenOff());
+        assertTrue(flight.isLanded());
+        assertFalse(flight.isFlying());
     }
 
     @Test
@@ -132,10 +118,6 @@ public class FlightTest {
         flight.setDestination("Bucharest");
         flight.takeOff();
         flight.land();
-        assertThrows(RuntimeException.class,
-                ()->{
-                    flight.setDestination("Sibiu");
-                });
-
+        assertThrows(RuntimeException.class, ()-> flight.setDestination("Sibiu"));
     }
 }

@@ -62,7 +62,7 @@ public class FlightWithPassengersTest {
     @Rule
     public MockitoRule mockitoRule = MockitoJUnit.rule();
 
-    private static Map<Passenger, Integer> passengersDistancesMap = new HashMap<>();
+    private static final Map<Passenger, Integer> passengersDistancesMap = new HashMap<>();
 
     @BeforeClass
     public static void setUp() {

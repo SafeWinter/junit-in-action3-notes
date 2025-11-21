@@ -26,8 +26,8 @@ import java.util.List;
 
 public abstract class Flight {
 
-    private String id;
-    List<Passenger> passengers = new ArrayList<Passenger>();
+    private final String id;
+    List<Passenger> passengers = new ArrayList<>();
 
     public Flight(String id) {
         this.id = id;

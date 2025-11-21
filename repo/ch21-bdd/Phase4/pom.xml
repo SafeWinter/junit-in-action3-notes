@@ -6,7 +6,7 @@
     <artifactId>ch21-bdd</artifactId>
     <packaging>jar</packaging>
     <version>1.0-SNAPSHOT</version>
-    <name>ch21-bdd</name>
+    <name>ch21-bdd4</name>
     <url>http://maven.apache.org</url>
 
     <build>
@@ -42,7 +42,7 @@
         <dependency>
             <groupId>org.junit.vintage</groupId>
             <artifactId>junit-vintage-engine</artifactId>
-            <version>5.6.0</version>
+            <version>5.11.3</version>
             <scope>test</scope>
         </dependency>
         <dependency>

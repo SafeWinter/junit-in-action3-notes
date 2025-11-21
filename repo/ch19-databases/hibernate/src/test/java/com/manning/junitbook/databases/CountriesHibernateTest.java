@@ -39,8 +39,8 @@ public class CountriesHibernateTest {
     private EntityManagerFactory emf;
     private EntityManager em;
 
-    private List<Country> expectedCountryList = new ArrayList<>();
-    private List<Country> expectedCountryListStartsWithA = new ArrayList<>();
+    private final List<Country> expectedCountryList = new ArrayList<>();
+    private final List<Country> expectedCountryListStartsWithA = new ArrayList<>();
 
     public static final String[][] COUNTRY_INIT_DATA = {{"Australia", "AU"}, {"Canada", "CA"}, {"France", "FR"},
             {"Germany", "DE"}, {"Italy", "IT"}, {"Japan", "JP"}, {"Romania", "RO"},
@@ -56,8 +56,7 @@ public class CountriesHibernateTest {
 
         em.getTransaction().begin();
 
-        for (int i = 0; i < COUNTRY_INIT_DATA.length; i++) {
-            String[] countryInitData = COUNTRY_INIT_DATA[i];
+        for (String[] countryInitData : COUNTRY_INIT_DATA) {
             Country country = new Country(countryInitData[0], countryInitData[1]);
             em.persist(country);
         }
@@ -93,8 +92,7 @@ public class CountriesHibernateTest {
     }
 
     private void initExpectedCountryLists() {
-        for (int i = 0; i < COUNTRY_INIT_DATA.length; i++) {
-            String[] countryInitData = COUNTRY_INIT_DATA[i];
+        for (String[] countryInitData : COUNTRY_INIT_DATA) {
             Country country = new Country(countryInitData[0], countryInitData[1]);
             expectedCountryList.add(country);
             if (country.getName().startsWith("A")) {

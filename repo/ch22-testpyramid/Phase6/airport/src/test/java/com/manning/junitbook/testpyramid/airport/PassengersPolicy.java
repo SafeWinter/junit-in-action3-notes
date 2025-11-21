@@ -32,9 +32,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class PassengersPolicy {
     private Flight flight;
-    private List<Passenger> regularPassengers = new ArrayList<>();
-    private List<Passenger> vipPassengers = new ArrayList<>();
-    private Flight anotherFlight = new Flight("AA7890", 48);
+    private final List<Passenger> regularPassengers = new ArrayList<>();
+    private final List<Passenger> vipPassengers = new ArrayList<>();
+    private final Flight anotherFlight = new Flight("AA7890", 48);
 
     @Given("^there is a flight having number \"([^\"]*)\" and (\\d+) seats with passengers defined into \"([^\"]*)\"$")
     public void there_is_a_flight_having_number_and_seats_with_passengers_defined_into(String flightNumber, int seats, String fileName) throws Throwable {

@@ -6,7 +6,7 @@
     <artifactId>ch21-bdd</artifactId>
     <packaging>jar</packaging>
     <version>1.0-SNAPSHOT</version>
-    <name>ch21-bdd</name>
+    <name>ch21-bdd2</name>
     <url>http://maven.apache.org</url>
 
     <build>
@@ -48,13 +48,13 @@
         <dependency>
             <groupId>info.cukes</groupId>
             <artifactId>cucumber-java</artifactId>
-            <version>1.2.5</version>
+            <version>1.2.6</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>info.cukes</groupId>
             <artifactId>cucumber-junit</artifactId>
-            <version>1.2.5</version>
+            <version>1.2.6</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

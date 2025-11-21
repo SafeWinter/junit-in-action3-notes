@@ -6,7 +6,7 @@
     <artifactId>testpyramid</artifactId>
     <packaging>jar</packaging>
     <version>1.0-SNAPSHOT</version>
-    <name>testpyramid</name>
+    <name>testpyramid3</name>
     <url>http://maven.apache.org</url>
 
     <properties>
