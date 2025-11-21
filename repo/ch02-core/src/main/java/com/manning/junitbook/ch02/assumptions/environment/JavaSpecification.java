@@ -22,7 +22,7 @@
 package com.manning.junitbook.ch02.assumptions.environment;
 
 public class JavaSpecification {
-    private String version;
+    private final String version;
 
     public JavaSpecification(String version) {
         this.version = version;

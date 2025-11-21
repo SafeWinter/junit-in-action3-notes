@@ -57,9 +57,16 @@ public class HamcrestListTest {
     @DisplayName("List with Hamcrest will intentionally fail to show how failing information is displayed")
     public void testListWithHamcrest() {
         assertThat(values, hasSize(3));
-        assertThat(values, hasItem(anyOf(equalTo("Oliver"), equalTo("Jack"),
+        assertThat(values, hasItem(anyOf(
+                equalTo("Oliver"),
+                equalTo("Jack"),
                 equalTo("Harry"))));
-        assertThat("The list doesn't contain all the expected objects, in order", values, contains("Oliver", "Jack", "Harry"));
-        assertThat("The list doesn't contain all the expected objects", values, containsInAnyOrder("Jack", "Harry", "Oliver"));
+        assertThat("The list doesn't contain all the expected objects, in order",
+                values,
+                contains("Oliver", "Jack", "Harry")
+        );
+        assertThat("The list doesn't contain all the expected objects",
+                values,
+                containsInAnyOrder("Jack", "Harry", "Oliver"));
     }
 }

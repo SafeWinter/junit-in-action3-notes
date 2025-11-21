@@ -31,8 +31,8 @@ import static org.junit.Assert.assertTrue;
 
 @Category({IndividualTests.class, RepositoryTests.class})
 public class JUnit4CustomersRepositoryTest {
-    private String CUSTOMER_NAME = "John Smith";
-    private CustomersRepository repository = new CustomersRepository();
+    private final String CUSTOMER_NAME = "John Smith";
+    private final CustomersRepository repository = new CustomersRepository();
 
     @Test
     public void testNonExistence() {

@@ -36,7 +36,7 @@ public class NestedTestsTest {
 
     @Nested
     class BuilderTest {
-        private String MIDDLE_NAME = "Michael";
+        private final String MIDDLE_NAME = "Michael";
 
         @Test
         void customerBuilder() throws ParseException {
@@ -49,20 +49,20 @@ public class NestedTestsTest {
                     .build();
 
 
-            assertAll(() -> {
-                assertEquals(Gender.MALE, customer.getGender());
-                assertEquals(FIRST_NAME, customer.getFirstName());
-                assertEquals(LAST_NAME, customer.getLastName());
-                assertEquals(MIDDLE_NAME, customer.getMiddleName());
-                assertEquals(customerDate, customer.getBecomeCustomer());
-            });
+            assertAll(
+                () -> assertEquals(Gender.MALE, customer.getGender()),
+                () -> assertEquals(FIRST_NAME, customer.getFirstName()),
+                () -> assertEquals(LAST_NAME, customer.getLastName()),
+                () -> assertEquals(MIDDLE_NAME, customer.getMiddleName()),
+                () -> assertEquals(customerDate, customer.getBecomeCustomer())
+            );
         }
     }
 
     @Nested
     class CustomerEqualsTest {
-        private String OTHER_FIRST_NAME = "John";
-        private String OTHER_LAST_NAME = "Doe";
+        private final String OTHER_FIRST_NAME = "John";
+        private final String OTHER_LAST_NAME = "Doe";
 
         @Test
         void testDifferentCustomers() {
@@ -80,17 +80,15 @@ public class NestedTestsTest {
             Customer otherCustomer = new Customer.Builder(Gender.MALE, FIRST_NAME, LAST_NAME)
                     .build();
 
-            assertAll(() -> {
-                assertEquals(customer, otherCustomer);
-                assertNotSame(customer, otherCustomer);
-            });
+            assertAll(() -> assertEquals(customer, otherCustomer),
+                    () -> assertNotSame(customer, otherCustomer));
         }
     }
 
     @Nested
     class CustomerHashCodeTest {
-        private String OTHER_FIRST_NAME = "John";
-        private String OTHER_LAST_NAME = "Doe";
+        private final String OTHER_FIRST_NAME = "John";
+        private final String OTHER_LAST_NAME = "Doe";
 
         @Test
         void testDifferentCustomers() {

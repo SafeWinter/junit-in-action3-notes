@@ -33,13 +33,13 @@ import static org.junit.Assume.assumeTrue;
 
 
 public class JUnit4AssumptionsTest {
-    private static String EXPECTED_JAVA_VERSION = "1.8";
-    private TestsEnvironment environment = new TestsEnvironment(
+    private final static String EXPECTED_JAVA_VERSION = "1.8";
+    private final TestsEnvironment environment = new TestsEnvironment(
             new JavaSpecification(System.getProperty("java.vm.specification.version")),
             new OperationSystem(System.getProperty("os.name"), System.getProperty("os.arch"))
     );
 
-    private SUT systemUnderTest = new SUT();
+    private final SUT systemUnderTest = new SUT();
 
     @Before
     public void setUp() {

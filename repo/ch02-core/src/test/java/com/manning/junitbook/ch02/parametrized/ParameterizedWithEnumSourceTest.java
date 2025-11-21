@@ -28,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.params.provider.EnumSource.Mode.EXCLUDE;
 
 class ParameterizedWithEnumSourceTest {
-    private WordCounter wordCounter = new WordCounter();
+    private final WordCounter wordCounter = new WordCounter();
 
     @ParameterizedTest
     @EnumSource(Sentences.class)

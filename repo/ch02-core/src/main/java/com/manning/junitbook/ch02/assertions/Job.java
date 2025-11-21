@@ -24,7 +24,7 @@ package com.manning.junitbook.ch02.assertions;
 import java.util.Objects;
 
 public class Job {
-    private String name;
+    private final String name;
 
     public Job(String name) {
         this.name = name;

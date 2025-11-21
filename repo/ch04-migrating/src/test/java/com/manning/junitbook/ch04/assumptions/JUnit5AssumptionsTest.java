@@ -33,13 +33,13 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
 import static org.junit.jupiter.api.Assumptions.assumingThat;
 
 class JUnit5AssumptionsTest {
-    private static String EXPECTED_JAVA_VERSION = "1.8";
-    private TestsEnvironment environment = new TestsEnvironment(
+    private static final String EXPECTED_JAVA_VERSION = "1.8";
+    private final TestsEnvironment environment = new TestsEnvironment(
             new JavaSpecification(System.getProperty("java.vm.specification.version")),
             new OperationSystem(System.getProperty("os.name"), System.getProperty("os.arch"))
     );
 
-    private SUT systemUnderTest = new SUT();
+    private final SUT systemUnderTest = new SUT();
 
     @BeforeEach
     void setUp() {

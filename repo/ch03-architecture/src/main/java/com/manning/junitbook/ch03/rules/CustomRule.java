@@ -36,5 +36,23 @@ public class CustomRule implements TestRule {
         return new CustomStatement(base, description);
     }
 
+    private static class CustomStatement extends Statement {
+        private final Statement base;
+        private final Description description;
 
+        public CustomStatement(Statement base, Description description) {
+            this.base = base;
+            this.description = description;
+        }
+
+        @Override
+        public void evaluate() throws Throwable {
+            System.out.println(this.getClass().getSimpleName() + " " + description.getMethodName() + " has started");
+            try {
+                base.evaluate();
+            } finally {
+                System.out.println(this.getClass().getSimpleName() + " " + description.getMethodName() + " has finished");
+            }
+        }
+    }
 }

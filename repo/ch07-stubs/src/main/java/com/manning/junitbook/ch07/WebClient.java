@@ -32,7 +32,7 @@ import java.io.IOException;
  */
 public class WebClient {
     public String getContent(URL url) {
-        StringBuffer content = new StringBuffer();
+        StringBuilder content = new StringBuilder();
         try {
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setDoInput(true);

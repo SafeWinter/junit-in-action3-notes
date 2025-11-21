@@ -23,7 +23,7 @@ package com.manning.junitbook.ch04.lifecycle;
 
 public class ResourceForAllTests {
 
-    private String resourceName;
+    private final String resourceName;
 
     public ResourceForAllTests(String resourceName) {
         this.resourceName = resourceName;

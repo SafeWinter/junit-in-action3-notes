@@ -22,7 +22,7 @@
 package com.manning.junitbook.ch04.lifecycle;
 
 public class SUT {
-    private String systemName;
+    private final String systemName;
 
     public SUT(String systemName) {
         this.systemName = systemName;

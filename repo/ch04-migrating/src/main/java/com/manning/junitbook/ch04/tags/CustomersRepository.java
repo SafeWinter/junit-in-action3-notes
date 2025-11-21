@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CustomersRepository {
-    private List<Customer> customers = new ArrayList<>();
+    private final List<Customer> customers = new ArrayList<>();
 
     public boolean contains(String name) {
         return customers.stream().anyMatch(customer -> customer.getName().equals(name));

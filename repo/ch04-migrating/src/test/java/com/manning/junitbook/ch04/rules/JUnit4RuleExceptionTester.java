@@ -30,7 +30,7 @@ public class JUnit4RuleExceptionTester {
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
 
-    private Calculator calculator = new Calculator();
+    private final Calculator calculator = new Calculator();
 
     @Test
     public void expectIllegalArgumentException() {

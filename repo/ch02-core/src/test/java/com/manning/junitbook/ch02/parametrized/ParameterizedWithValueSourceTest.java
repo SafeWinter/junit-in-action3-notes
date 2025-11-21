@@ -27,7 +27,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ParameterizedWithValueSourceTest {
-    private WordCounter wordCounter = new WordCounter();
+    private final WordCounter wordCounter = new WordCounter();
 
     @ParameterizedTest
     @ValueSource(strings = {"Check three parameters", "JUnit in Action"})

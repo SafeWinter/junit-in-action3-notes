@@ -29,8 +29,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Tag("repository")
 public class CustomersRepositoryTest {
-    private String CUSTOMER_NAME = "John Smith";
-    private CustomersRepository repository = new CustomersRepository();
+    private final String CUSTOMER_NAME = "John Smith";
+    private final CustomersRepository repository = new CustomersRepository();
 
     @Test
     void testNonExistence() {

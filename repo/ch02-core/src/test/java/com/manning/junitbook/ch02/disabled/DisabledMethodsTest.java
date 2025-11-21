@@ -25,11 +25,10 @@ import com.manning.junitbook.ch02.lifecycle.SUT;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class DisabledMethodsTest {
-    private SUT systemUnderTest = new SUT("Our system under test");
+    private final SUT systemUnderTest = new SUT("Our system under test");
 
     @Test
     @Disabled

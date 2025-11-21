@@ -22,8 +22,8 @@
 package com.manning.junitbook.ch02.assumptions.environment;
 
 public class TestsEnvironment {
-    private JavaSpecification javaSpecification;
-    private OperationSystem operationSystem;
+    private final JavaSpecification javaSpecification;
+    private final OperationSystem operationSystem;
 
     public TestsEnvironment(JavaSpecification javaSpecification, OperationSystem operationSystem) {
         this.javaSpecification = javaSpecification;

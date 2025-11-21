@@ -34,7 +34,7 @@ public class JettySample {
         Server server = new Server(8081);
 
         Context root = new Context(server, "/");
-        root.setResourceBase("./pom.xml");
+        root.setResourceBase(".");
         root.setHandler(new ResourceHandler());
 
         server.setStopAtShutdown(true);

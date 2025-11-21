@@ -33,7 +33,7 @@ import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 
 class DynamicTestsTest {
 
-    private PositiveNumberPredicate predicate = new PositiveNumberPredicate();
+    private final PositiveNumberPredicate predicate = new PositiveNumberPredicate();
 
     @BeforeAll
     static void setUpClass() {
@@ -58,9 +58,18 @@ class DynamicTestsTest {
     @TestFactory
     Iterator<DynamicTest> positiveNumberPredicateTestCases() {
         return asList(
-                dynamicTest("negative number", () -> assertFalse(predicate.check(-1))),
-                dynamicTest("zero", () -> assertFalse(predicate.check(0))),
-                dynamicTest("positive number", () -> assertTrue(predicate.check(1)))
+                dynamicTest("negative number", () -> {
+                    System.out.println("negative number ...");
+                    assertFalse(predicate.check(-1));
+                }),
+                dynamicTest("zero", () -> {
+                    System.out.println("zero ...");
+                    assertFalse(predicate.check(0));
+                }),
+                dynamicTest("positive number", () -> {
+                    System.out.println("positive number ...");
+                    assertTrue(predicate.check(1));
+                })
         ).iterator();
     }
 }

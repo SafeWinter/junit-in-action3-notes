@@ -28,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DisplayName("Test class showing the @DisplayName annotation.")
 class DisplayNameTest {
-    private SUT systemUnderTest = new SUT();
+    private final SUT systemUnderTest = new SUT();
 
     @Test
     @DisplayName("Our system under test says hello.")

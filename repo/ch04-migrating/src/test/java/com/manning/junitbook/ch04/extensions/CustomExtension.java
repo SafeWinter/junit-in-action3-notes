@@ -27,12 +27,12 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 
 public class CustomExtension implements AfterEachCallback, BeforeEachCallback {
     @Override
-    public void beforeEach(ExtensionContext extensionContext) throws Exception {
+    public void beforeEach(ExtensionContext extensionContext) {
         System.out.println(this.getClass().getSimpleName() + " " + extensionContext.getDisplayName() + " has started");
     }
 
     @Override
-    public void afterEach(ExtensionContext extensionContext) throws Exception {
+    public void afterEach(ExtensionContext extensionContext) {
         System.out.println(this.getClass().getSimpleName() + " " + extensionContext.getDisplayName() + " has finished");
     }
 }

@@ -27,7 +27,7 @@ import org.junit.jupiter.params.provider.CsvFileSource;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ParameterizedWithCsvFileSourceTest {
-    private WordCounter wordCounter = new WordCounter();
+    private final WordCounter wordCounter = new WordCounter();
 
     @ParameterizedTest
     @CsvFileSource(resources = "/word_counter.csv")

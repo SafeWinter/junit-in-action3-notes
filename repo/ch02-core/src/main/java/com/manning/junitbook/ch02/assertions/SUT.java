@@ -25,9 +25,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SUT {
-    private String systemName;
+    private final String systemName;
     private boolean isVerified;
-    private List<Job> jobs = new ArrayList<>();
+    private final List<Job> jobs = new ArrayList<>();
     private Job currentJob;
 
     public SUT(String systemName) {
@@ -60,7 +60,7 @@ public class SUT {
     }
 
     public void run() {
-        if (jobs.size() > 0) {
+        if (!jobs.isEmpty()) {
             currentJob = jobs.remove(0);
             System.out.println("Running job: " + currentJob);
             return;
@@ -69,7 +69,7 @@ public class SUT {
     }
 
     public void run(int jobDuration) throws InterruptedException {
-        if (jobs.size() > 0) {
+        if (!jobs.isEmpty()) {
             currentJob = jobs.remove(0);
             System.out.println("Running job: " + currentJob + " lasts " + jobDuration + " milliseconds");
             Thread.sleep(jobDuration);

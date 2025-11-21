@@ -37,7 +37,7 @@ import org.mortbay.jetty.handler.AbstractHandler;
 import org.mortbay.jetty.servlet.Context;
 import org.mortbay.util.ByteArrayISO8859Writer;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * A sample test case that demonstrates how to stub an HTTP server using Jetty as an embedded server.
@@ -45,8 +45,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @version $Id$
  */
 public class TestWebClient {
-
-    private WebClient client = new WebClient();
 
     @BeforeAll
     public static void setUp() throws Exception {
@@ -72,23 +70,46 @@ public class TestWebClient {
 
     @Test
     public void testGetContentOk() throws MalformedURLException {
-        String workingContent = client.getContent(new URL("http://localhost:8081/testGetContentOk"));
+        String workingContent = new WebClient().getContent(new URL("http://localhost:8081/testGetContentOk"));
         assertEquals("It works", workingContent);
+    }
+
+    @Test
+    public void testGetContentError() {
+        final RuntimeException ex = assertThrows(RuntimeException.class, () -> {
+            final URL url = new URL("http://localhost:8081/testGetContentError");
+            new WebClient().getContent(url);
+        });
+        System.err.println("Error message: " + ex.getMessage());
+        assertTrue(ex.getMessage().contains("503"));
+    }
+
+    @Test
+    public void testGetContentNotFound(){
+        Throwable t = assertThrows(RuntimeException.class, () -> {
+            URL url = new URL("http://localhost:8081/testGetContentNotFound");
+            new WebClient().getContent(url);
+        });
+        String msg = t.getMessage();
+        System.err.println("Error message: " + msg);
+        assertTrue(msg.contains("FileNotFoundException"));
     }
 
     /**
      * Handler to handle the good requests to the server.
      */
     private static class TestGetContentOkHandler extends AbstractHandler {
-        public void handle(String target, HttpServletRequest request, HttpServletResponse response, int dispatch) throws IOException {
-
-            OutputStream out = response.getOutputStream();
-            ByteArrayISO8859Writer writer = new ByteArrayISO8859Writer();
-            writer.write("It works");
-            writer.flush();
-            response.setIntHeader(HttpHeaders.CONTENT_LENGTH, writer.size());
-            writer.writeTo(out);
-            out.flush();
+        public void handle(String target, HttpServletRequest request, HttpServletResponse response, int dispatch)
+                throws IOException {
+            try (OutputStream out = response.getOutputStream();
+                ByteArrayISO8859Writer writer = new ByteArrayISO8859Writer()
+            ){
+                writer.write("It works");
+                writer.flush();
+                response.setIntHeader(HttpHeaders.CONTENT_LENGTH, writer.size());
+                writer.writeTo(out);
+                out.flush();
+            }
         }
     }
 

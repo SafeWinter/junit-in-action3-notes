@@ -31,7 +31,7 @@ import java.lang.reflect.Method;
 
 public class CustomTestRunner extends Runner {
 
-    private Class<?> testedClass;
+    private final Class<?> testedClass;
 
     public CustomTestRunner(Class<?> testedClass) {
         this.testedClass = testedClass;

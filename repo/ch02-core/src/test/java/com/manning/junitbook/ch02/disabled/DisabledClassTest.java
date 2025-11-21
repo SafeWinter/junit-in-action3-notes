@@ -30,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Disabled("Feature is still under construction.")
 class DisabledClassTest {
-    private SUT systemUnderTest = new SUT("Our system under test");
+    private final SUT systemUnderTest = new SUT("Our system under test");
 
     @Test
     void testRegularWork() {

@@ -22,11 +22,12 @@
 package com.manning.junitbook.ch02.tags;
 
 import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@Tag("individual")
+@Tags({@Tag("individual"), @Tag("repository")})
 public class CustomerTest {
     private String CUSTOMER_NAME = "John Smith";
 

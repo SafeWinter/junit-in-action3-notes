@@ -25,17 +25,17 @@ import java.util.Date;
 import java.util.Objects;
 
 public class Customer {
-    private Gender gender;
-    private String firstName;
-    private String lastName;
+    private final Gender gender;
+    private final String firstName;
+    private final String lastName;
 
-    private String middleName;
-    private Date becomeCustomer;
+    private final String middleName;
+    private final Date becomeCustomer;
 
     public static class Builder {
-        private Gender gender;
-        private String lastName;
-        private String firstName;
+        private final Gender gender;
+        private final String lastName;
+        private final String firstName;
 
         private String middleName;
         private Date becomeCustomer;

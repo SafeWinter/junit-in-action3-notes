@@ -35,8 +35,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class RepeatedTestsTest {
 
-    private static Set<Integer> integerSet = new HashSet<>();
-    private static List<Integer> integerList = new ArrayList<>();
+    private static final Set<Integer> integerSet = new HashSet<>();
+    private static final List<Integer> integerList = new ArrayList<>();
 
     @RepeatedTest(value = 5, name = "{displayName} - repetition {currentRepetition}/{totalRepetitions}")
     @DisplayName("Test add operation")
@@ -46,12 +46,12 @@ public class RepeatedTestsTest {
     }
 
     @RepeatedTest(value = 5, name = "the list contains {currentRepetition} elements(s), the set contains 1 element")
-    void testAddingToCollections(TestReporter testReporter, RepetitionInfo repetitionInfo) {
+    void testAddingToCollections(TestReporter testReporter, RepetitionInfo rpt) {
         integerSet.add(1);
-        integerList.add(repetitionInfo.getCurrentRepetition());
+        integerList.add(rpt.getCurrentRepetition());
 
-        testReporter.publishEntry("Repetition number", String.valueOf(repetitionInfo.getCurrentRepetition()));
+        testReporter.publishEntry("Repetition number", String.valueOf(rpt.getCurrentRepetition()));
         assertEquals(1, integerSet.size());
-        assertEquals(repetitionInfo.getCurrentRepetition(), integerList.size());
+        assertEquals(rpt.getCurrentRepetition(), integerList.size());
     }
 }

@@ -33,9 +33,9 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 public class HamcrestMatchersTest {
 
-    private static String FIRST_NAME = "John";
-    private static String LAST_NAME = "Smith";
-    private static Customer customer = new Customer(FIRST_NAME, LAST_NAME);
+    private static final String FIRST_NAME = "John";
+    private static final String LAST_NAME = "Smith";
+    private static final Customer customer = new Customer(FIRST_NAME, LAST_NAME);
 
 
     @Test

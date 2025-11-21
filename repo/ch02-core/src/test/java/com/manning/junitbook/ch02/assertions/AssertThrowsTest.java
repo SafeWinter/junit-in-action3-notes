@@ -28,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class AssertThrowsTest {
-    private SUT systemUnderTest = new SUT("Our system under test");
+    private final SUT systemUnderTest = new SUT("Our system under test");
 
     @Test
     @DisplayName("An exception is expected")

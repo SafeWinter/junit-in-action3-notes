@@ -25,8 +25,8 @@ import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 
 public class CustomStatement extends Statement {
-    private Statement base;
-    private Description description;
+    private final Statement base;
+    private final Description description;
 
     public CustomStatement(Statement base, Description description) {
         this.base = base;

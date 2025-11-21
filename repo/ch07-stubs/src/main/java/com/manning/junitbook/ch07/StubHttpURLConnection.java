@@ -33,7 +33,6 @@ import java.io.ByteArrayInputStream;
  * @version $Id$
  */
 public class StubHttpURLConnection extends HttpURLConnection {
-    private boolean isInput = true;
 
     protected StubHttpURLConnection(URL url) {
         super(url);
@@ -41,15 +40,15 @@ public class StubHttpURLConnection extends HttpURLConnection {
 
     @Override
     public InputStream getInputStream() throws IOException {
+        boolean isInput = true;
         if (!isInput) {
             throw new ProtocolException("Cannot read from URLConnection" + " if doInput=false (call setDoInput(true))");
         }
-        ByteArrayInputStream readStream = new ByteArrayInputStream(new String("It works").getBytes());
-        return readStream;
+        return new ByteArrayInputStream("It works".getBytes());
     }
 
     @Override
-    public void connect() throws IOException {
+    public void connect() {
     }
 
     @Override
