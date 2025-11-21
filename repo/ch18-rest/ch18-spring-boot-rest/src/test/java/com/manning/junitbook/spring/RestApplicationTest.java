@@ -32,6 +32,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.*;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.web.util.NestedServletException;
 
 import java.util.ArrayList;
@@ -104,9 +105,10 @@ public class RestApplicationTest {
         passenger.setIsRegistered(false);
         when(passengerRepository.save(passenger)).thenReturn(passenger);
 
-        mvc.perform(post("/passengers")
+        final MockHttpServletRequestBuilder mockRequest = post("/passengers")
                 .content(new ObjectMapper().writeValueAsString(passenger))
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON))
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON);
+        mvc.perform(mockRequest)
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.name", is("Peter Michelsen")))
                 .andExpect(jsonPath("$.country.codeName", is("US")))

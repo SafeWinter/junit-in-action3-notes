@@ -26,7 +26,6 @@ import com.manning.junitbook.spring.model.Passenger;
 import org.springframework.context.annotation.Bean;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Collections;
@@ -35,15 +34,15 @@ import java.util.Map;
 
 public class FlightBuilder {
 
-    private Map<String, Country> countriesMap = new HashMap<>();
+    private final Map<String, Country> countriesMap = new HashMap<>();
 
     public FlightBuilder() throws IOException {
         try (BufferedReader reader = new BufferedReader(new FileReader("src/main/resources/countries_information.csv"))) {
-            String line = null;
+            String line;
             do {
                 line = reader.readLine();
                 if (line != null) {
-                    String[] countriesString = line.toString().split(";");
+                    String[] countriesString = line.split(";");
                     Country country = new Country(countriesString[0].trim(), countriesString[1].trim());
                     countriesMap.put(countriesString[1].trim(), country);
                 }
@@ -60,11 +59,11 @@ public class FlightBuilder {
     public Flight buildFlightFromCsv() throws IOException {
         Flight flight = new Flight("AA1234", 20);
         try (BufferedReader reader = new BufferedReader(new FileReader("src/main/resources/flights_information.csv"))) {
-            String line = null;
+            String line;
             do {
                 line = reader.readLine();
                 if (line != null) {
-                    String[] passengerString = line.toString().split(";");
+                    String[] passengerString = line.split(";");
                     Passenger passenger = new Passenger(passengerString[0].trim());
                     passenger.setCountry(countriesMap.get(passengerString[1].trim()));
                     passenger.setIsRegistered(false);

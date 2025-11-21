@@ -26,9 +26,9 @@ import java.util.Set;
 
 public class Flight {
 
-    private String flightNumber;
-    private int seats;
-    private Set<Passenger> passengers = new HashSet<>();
+    private final String flightNumber;
+    private final int seats;
+    private final Set<Passenger> passengers = new HashSet<>();
 
     public Flight(String flightNumber, int seats) {
         this.flightNumber = flightNumber;

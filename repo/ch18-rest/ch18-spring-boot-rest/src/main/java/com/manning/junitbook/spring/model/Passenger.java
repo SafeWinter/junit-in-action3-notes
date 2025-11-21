@@ -36,7 +36,7 @@ public class Passenger {
 
     // avoid "No default constructor for entity"
     public Passenger() {
-
+        this(null);
     }
 
     public Passenger(String name) {

@@ -1,0 +1,206 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > PassengerController</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.manning.junitbook.spring.model</a>
+</div>
+
+<h1>Coverage Summary for Class: PassengerController (com.manning.junitbook.spring.model)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">PassengerController</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (7/7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    50%
+  </span>
+  <span class="absValue">
+    (3/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (21/21)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*
+&nbsp; * ========================================================================
+&nbsp; *
+&nbsp; * Licensed to the Apache Software Foundation (ASF) under one or more
+&nbsp; * contributor license agreements.  See the NOTICE file distributed with
+&nbsp; * this work for additional information regarding copyright ownership.
+&nbsp; * The ASF licenses this file to You under the Apache License, Version 2.0
+&nbsp; * (the &quot;License&quot;); you may not use this file except in compliance with
+&nbsp; * the License.  You may obtain a copy of the License at
+&nbsp; *
+&nbsp; *   http://www.apache.org/licenses/LICENSE-2.0
+&nbsp; *
+&nbsp; * Unless required by applicable law or agreed to in writing, software
+&nbsp; * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+&nbsp; * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+&nbsp; * See the License for the specific language governing permissions and
+&nbsp; * limitations under the License.
+&nbsp; *
+&nbsp; * ========================================================================
+&nbsp; */
+&nbsp;package com.manning.junitbook.spring.model;
+&nbsp;
+&nbsp;import com.manning.junitbook.spring.exceptions.PassengerNotFoundException;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.http.HttpStatus;
+&nbsp;import org.springframework.web.bind.annotation.*;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Map;
+&nbsp;
+&nbsp;@RestController
+&nbsp;public class PassengerController {
+&nbsp;
+&nbsp;    private final PassengerRepository repository;
+&nbsp;
+&nbsp;    private final Map&lt;String, Country&gt; countriesMap;
+&nbsp;
+<b class="fc">&nbsp;    public PassengerController(PassengerRepository repository, Map&lt;String, Country&gt; countriesMap) {</b>
+<b class="fc">&nbsp;        this.repository = repository;</b>
+<b class="fc">&nbsp;        this.countriesMap = countriesMap;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @GetMapping(&quot;/passengers&quot;)
+&nbsp;    List&lt;Passenger&gt; findAll() {
+<b class="fc">&nbsp;        return repository.findAll();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @PostMapping(&quot;/passengers&quot;)
+&nbsp;    @ResponseStatus(HttpStatus.CREATED)
+&nbsp;    Passenger createPassenger(@RequestBody Passenger passenger) {
+<b class="fc">&nbsp;        return repository.save(passenger);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @GetMapping(&quot;/passengers/{id}&quot;)
+&nbsp;    Passenger findPassenger(@PathVariable Long id) {
+<b class="fc">&nbsp;        return repository.findById(id)</b>
+<b class="fc">&nbsp;                .orElseThrow(() -&gt; new PassengerNotFoundException(id));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @PatchMapping(&quot;/passengers/{id}&quot;)
+&nbsp;    Passenger patchPassenger(@RequestBody Map&lt;String, String&gt; updates, @PathVariable Long id) {
+&nbsp;
+<b class="fc">&nbsp;        return repository.findById(id)</b>
+<b class="fc">&nbsp;                .map(passenger -&gt; {</b>
+&nbsp;
+<b class="fc">&nbsp;                    String name = updates.get(&quot;name&quot;);</b>
+<b class="pc">&nbsp;                    if (null != name) {</b>
+<b class="fc">&nbsp;                        passenger.setName(name);</b>
+&nbsp;                    }
+&nbsp;
+<b class="fc">&nbsp;                    Country country = countriesMap.get(updates.get(&quot;country&quot;));</b>
+<b class="pc">&nbsp;                    if (null != country) {</b>
+<b class="fc">&nbsp;                        passenger.setCountry(country);</b>
+&nbsp;                    }
+&nbsp;
+<b class="fc">&nbsp;                    String isRegistered = updates.get(&quot;isRegistered&quot;);</b>
+<b class="pc">&nbsp;                    if (null != isRegistered) {</b>
+<b class="fc">&nbsp;                        passenger.setIsRegistered(isRegistered.equalsIgnoreCase(&quot;true&quot;));</b>
+&nbsp;                    }
+<b class="fc">&nbsp;                    return repository.save(passenger);</b>
+&nbsp;                })
+<b class="fc">&nbsp;                .orElseThrow(() -&gt; new PassengerNotFoundException(id));</b>
+&nbsp;
+&nbsp;    }
+&nbsp;
+&nbsp;    @DeleteMapping(&quot;/passengers/{id}&quot;)
+&nbsp;    void deletePassenger(@PathVariable Long id) {
+<b class="fc">&nbsp;        repository.deleteById(id);</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-11-05 01:53</div>
+</div>
+</body>
+</html>

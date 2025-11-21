@@ -72,13 +72,11 @@ public class PassengerController {
 
                     String isRegistered = updates.get("isRegistered");
                     if (null != isRegistered) {
-                        passenger.setIsRegistered(isRegistered.equalsIgnoreCase("true") ? true : false);
+                        passenger.setIsRegistered(isRegistered.equalsIgnoreCase("true"));
                     }
                     return repository.save(passenger);
                 })
-                .orElseGet(() -> {
-                    throw new PassengerNotFoundException(id);
-                });
+                .orElseThrow(() -> new PassengerNotFoundException(id));
 
     }
 

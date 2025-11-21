@@ -36,4 +36,10 @@ public class CountryController {
         return repository.findAll();
     }
 
+    @GetMapping("/countries/{id}")
+    Country findOne(@PathVariable String id){
+        return repository.findById(id.toUpperCase())
+                .orElseThrow(() -> new RuntimeException("Country (id = " + id + ") not found!"));
+    }
+
 }

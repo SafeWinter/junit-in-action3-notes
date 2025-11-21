@@ -49,14 +49,8 @@ public class Application {
     CommandLineRunner configureRepository(CountryRepository countryRepository,
                                           PassengerRepository passengerRepository) {
         return args -> {
-
-            for (Country country : countriesMap.values()) {
-                countryRepository.save(country);
-            }
-
-            for (Passenger passenger : flight.getPassengers()) {
-                passengerRepository.save(passenger);
-            }
+            countryRepository.saveAll(countriesMap.values());
+            passengerRepository.saveAll(flight.getPassengers());
         };
     }
 
