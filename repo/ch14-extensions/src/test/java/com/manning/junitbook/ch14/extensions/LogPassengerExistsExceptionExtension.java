@@ -27,7 +27,7 @@ import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
 import java.util.logging.Logger;
 
 public class LogPassengerExistsExceptionExtension implements TestExecutionExceptionHandler {
-    private Logger logger = Logger.getLogger(this.getClass().getName());
+    private final Logger logger = Logger.getLogger(getClass().getName());
 
     @Override
     public void handleTestExecutionException(ExtensionContext context, Throwable throwable) throws Throwable {

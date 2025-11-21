@@ -20,6 +20,8 @@
  */
 package com.manning.junitbook.spring;
 
+import java.util.Objects;
+
 public class Country {
     private String name;
     private String codeName;
@@ -60,10 +62,8 @@ public class Country {
 
         Country country = (Country) o;
 
-        if (codeName != null ? !codeName.equals(country.codeName) : country.codeName != null) return false;
-        if (name != null ? !name.equals(country.name) : country.name != null) return false;
-
-        return true;
+        if (!Objects.equals(codeName, country.codeName)) return false;
+        return Objects.equals(name, country.name);
     }
 
     @Override

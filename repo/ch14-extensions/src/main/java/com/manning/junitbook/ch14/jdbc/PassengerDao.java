@@ -23,8 +23,8 @@ package com.manning.junitbook.ch14.jdbc;
 import com.manning.junitbook.ch14.Passenger;
 
 public interface PassengerDao {
-	public void insert(Passenger passenger) throws PassengerExistsException;
-	public void update(String id, String name);
-	public void delete(Passenger passenger);
-	public Passenger getById(String id);
+	void insert(Passenger passenger) throws PassengerExistsException ;
+	void update(String id, String name);
+	void delete(Passenger passenger);
+	Passenger getById(String id);
 }

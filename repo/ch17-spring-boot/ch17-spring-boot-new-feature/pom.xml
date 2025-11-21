@@ -11,7 +11,7 @@
     <groupId>com.manning.junitbook</groupId>
     <artifactId>spring</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>spring</name>
+    <name>spring-boot-new-feature</name>
     <description>Demo project for Spring Boot</description>
 
     <properties>

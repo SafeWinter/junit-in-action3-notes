@@ -25,56 +25,55 @@ import com.manning.junitbook.ch14.jdbc.*;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 @ExtendWith({ExecutionContextExtension.class, DatabaseOperationsExtension.class,
         DataAccessObjectParameterResolver.class,
-        LogPassengerExistsExceptionExtension.class})
+        LogPassengerExistsExceptionExtension.class,
+        PassengerParameterResolver.class
+})
 public class PassengerTest {
 
-    private PassengerDao passengerDao;
+    private final PassengerDao passengerDao;
 
     public PassengerTest(PassengerDao passengerDao) {
         this.passengerDao = passengerDao;
     }
 
     @Test
-    void testPassenger() {
-        Passenger passenger = new Passenger("123-456-789", "John Smith");
+    void testPassenger(Passenger passenger) {
         assertEquals("Passenger John Smith with identifier: 123-456-789", passenger.toString());
     }
 
     @Test
-    void testInsertPassenger() throws PassengerExistsException {
-        Passenger passenger = new Passenger("123-456-789", "John Smith");
+    void testInsertPassenger(Passenger passenger) throws PassengerExistsException {
         passengerDao.insert(passenger);
         assertEquals("John Smith", passengerDao.getById("123-456-789").getName());
     }
 
     @Test
-    void testUpdatePassenger() throws PassengerExistsException {
-        Passenger passenger = new Passenger("123-456-789", "John Smith");
+    void testUpdatePassenger(Passenger passenger) throws PassengerExistsException {
         passengerDao.insert(passenger);
         passengerDao.update("123-456-789", "Michael Smith");
         assertEquals("Michael Smith", passengerDao.getById("123-456-789").getName());
     }
 
     @Test
-    void testDeletePassenger() throws PassengerExistsException {
-        Passenger passenger = new Passenger("123-456-789", "John Smith");
+    void testDeletePassenger(Passenger passenger) throws PassengerExistsException {
         passengerDao.insert(passenger);
         passengerDao.delete(passenger);
         assertNull(passengerDao.getById("123-456-789"));
     }
 
     @Test
-    void testInsertExistingPassenger() throws PassengerExistsException {
-        Passenger passenger = new Passenger("123-456-789", "John Smith");
-        passengerDao.insert(passenger);
-        passengerDao.insert(passenger);
+    void testInsertExistingPassenger(Passenger passenger) {
+        final PassengerExistsException ex = assertThrows(PassengerExistsException.class, () -> {
+            passengerDao.insert(passenger);
+            passengerDao.insert(passenger);
+        });
         assertEquals("John Smith", passengerDao.getById("123-456-789").getName());
+        assertEquals(passenger.toString(), ex.getMessage());
     }
 
 }

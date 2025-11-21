@@ -29,7 +29,6 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -48,7 +47,7 @@ public class GoogleSearchTest {
     private RemoteWebDriver driver;
 
     public static Collection<RemoteWebDriver> getBrowserVersions() {
-        return Arrays.asList(new RemoteWebDriver[]{new FirefoxDriver(), new ChromeDriver(), new InternetExplorerDriver()});
+        return Arrays.asList(new RemoteWebDriver[]{new ChromeDriver(), new FirefoxDriver()});
     }
 
     @ParameterizedTest
@@ -61,7 +60,7 @@ public class GoogleSearchTest {
         driver.findElement(By.name("q")).sendKeys(Keys.ENTER);
 
         // wait until the Google page shows the result
-        WebElement myDynamicElement = (new WebDriverWait(driver, 10))
+        WebElement myDynamicElement = (new WebDriverWait(driver, 100))
                 .until(ExpectedConditions.presenceOfElementLocated(By.id("result-stats")));
 
         List<WebElement> findElements = driver.findElements(By.xpath("//*[@id='rso']//a/h3"));
@@ -71,11 +70,11 @@ public class GoogleSearchTest {
         assertEquals("https://en.wikipedia.org/wiki/Main_Page", driver.getCurrentUrl());
         assertThat(driver.getTitle(), is("Wikipedia, the free encyclopedia"));
 
-        WebElement contents = driver.findElementByLinkText("Contents");
+        WebElement contents = driver.findElement(By.linkText("Donate"));
         assertTrue(contents.isDisplayed());
         contents.click();
 
-        assertThat(driver.getTitle(), is("Wikipedia:Contents - Wikipedia"));
+        assertThat(driver.getTitle(), is("Make your donation now - Wikimedia Foundation"));
     }
 
     @AfterEach

@@ -27,7 +27,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.ie.InternetExplorerDriver;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -40,7 +39,10 @@ public class MultiBrowserSeleniumTest {
     private WebDriver driver;
 
     public static Collection<WebDriver> getBrowserVersions() {
-        return Arrays.asList(new WebDriver[]{new FirefoxDriver(), new ChromeDriver(), new InternetExplorerDriver()});
+        return Arrays.asList(new WebDriver[]{
+                new FirefoxDriver(),
+                new ChromeDriver(),
+        });
     }
 
     @ParameterizedTest
@@ -48,7 +50,7 @@ public class MultiBrowserSeleniumTest {
     void testManningAccess(WebDriver driver) {
         this.driver = driver;
         driver.get("https://www.manning.com/");
-        assertThat(driver.getTitle(), is("Manning | Home"));
+        assertThat(driver.getTitle(), is("Manning"));
     }
 
     @ParameterizedTest

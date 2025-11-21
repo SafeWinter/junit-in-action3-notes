@@ -28,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class LoginPage {
 
-    private WebDriver webDriver;
+    private final WebDriver webDriver;
 
     public LoginPage(WebDriver webDriver) {
         this.webDriver = webDriver;

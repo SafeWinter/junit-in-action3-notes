@@ -40,6 +40,7 @@ public class RegistrationTest {
 
 	@Test
 	public void testPersonRegistration() {
+		System.out.println("Before registering: " + passenger);
 		registrationManager.getApplicationContext().publishEvent(new PassengerRegistrationEvent(passenger));
 		System.out.println("After registering:");
 		System.out.println(passenger);

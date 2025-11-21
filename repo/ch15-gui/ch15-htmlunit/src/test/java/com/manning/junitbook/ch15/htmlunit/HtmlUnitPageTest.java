@@ -22,9 +22,8 @@ package com.manning.junitbook.ch15.htmlunit;
 
 import java.io.IOException;
 
-import com.gargoylesoftware.htmlunit.html.HtmlListItem;
-
-import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import org.htmlunit.html.HtmlListItem;
+import org.htmlunit.html.HtmlPage;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -38,21 +37,22 @@ public class HtmlUnitPageTest extends ManagedWebClient {
 
     @Test
     public void homePage() throws IOException {
-        HtmlPage page = webClient.getPage("http://htmlunit.sourceforge.net");
+        webClient.getOptions().setJavaScriptEnabled(false);
+        HtmlPage page = webClient.getPage("https://htmlunit.sourceforge.io/");
         assertEquals("HtmlUnit – Welcome to HtmlUnit", page.getTitleText());
 
         String pageAsXml = page.asXml();
         assertTrue(pageAsXml.contains("<div class=\"container-fluid\">"));
 
-        String pageAsText = page.asText();
+        String pageAsText = page.asNormalizedText();
         assertTrue(pageAsText.contains("Support for the HTTP and HTTPS protocols"));
     }
 
     @Test
     public void testClassNav() throws IOException {
-        HtmlPage mainPage = webClient.getPage("http://htmlunit.sourceforge.net/apidocs/index.html");
+        HtmlPage mainPage = webClient.getPage("https://htmlunit.sourceforge.io/apidocs/index.html");
         HtmlPage packagePage = (HtmlPage) mainPage.getFrameByName("packageFrame").getEnclosedPage();
         HtmlListItem htmlListItem = (HtmlListItem) packagePage.getElementsByTagName("li").item(0);
-        assertEquals("AboutURLConnection", htmlListItem.getTextContent());
+        assertEquals("AbortController", htmlListItem.getTextContent());
     }
 }

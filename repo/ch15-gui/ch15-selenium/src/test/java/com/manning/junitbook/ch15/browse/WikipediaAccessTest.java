@@ -23,6 +23,7 @@ package com.manning.junitbook.ch15.browse;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -45,11 +46,11 @@ public class WikipediaAccessTest {
         driver.get("https://en.wikipedia.org/");
         assertThat(driver.getTitle(), is("Wikipedia, the free encyclopedia"));
 
-        WebElement contents = driver.findElementByLinkText("Contents");
+        WebElement contents = driver.findElement(By.linkText("Donate"));
         assertTrue(contents.isDisplayed());
 
         contents.click();
-        assertThat(driver.getTitle(), is("Wikipedia:Contents - Wikipedia"));
+        assertThat(driver.getTitle(), is("Make your donation now - Wikimedia Foundation"));
     }
 
     @AfterEach

@@ -21,8 +21,6 @@
 package com.manning.junitbook.spring;
 
 import com.manning.junitbook.spring.beans.FlightBuilder;
-import com.manning.junitbook.spring.beans.TestBeans;
-import com.manning.junitbook.spring.model.Country;
 import com.manning.junitbook.spring.model.Flight;
 import com.manning.junitbook.spring.model.Passenger;
 import com.manning.junitbook.spring.registration.PassengerRegistrationEvent;
@@ -30,6 +28,7 @@ import com.manning.junitbook.spring.registration.RegistrationManager;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Import;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -57,5 +56,15 @@ public class FlightTest {
         for (Passenger passenger : flight.getPassengers()) {
             assertTrue(passenger.isRegistered());
         }
+    }
+
+    @Test
+    void testFlightPassengerRegistration() {
+        ApplicationContext ctx = registrationManager.getApplicationContext();
+        flight.getPassengers()
+                .parallelStream()
+                .peek(p -> assertFalse(p.isRegistered()))
+                .peek(p -> ctx.publishEvent(new PassengerRegistrationEvent(p)))
+                .forEach(p -> assertTrue(p.isRegistered()));
     }
 }

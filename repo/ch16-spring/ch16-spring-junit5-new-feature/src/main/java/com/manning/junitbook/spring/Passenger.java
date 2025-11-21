@@ -60,7 +60,7 @@ public class Passenger {
                 "name='" + name + '\'' +
                 ", country=" + country +
                 ", registered=" + isRegistered +
-                '}';
+                "}";
     }
 
     @Override

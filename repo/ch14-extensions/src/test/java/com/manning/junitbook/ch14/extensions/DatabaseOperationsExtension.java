@@ -56,6 +56,4 @@ public class DatabaseOperationsExtension implements BeforeAllCallback, AfterAllC
     public void afterEach(ExtensionContext context) throws SQLException {
         connection.rollback(savepoint);
     }
-
-
 }

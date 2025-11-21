@@ -38,7 +38,6 @@ public class TestBeans {
 
     @Bean
     Country createCountry() {
-        Country country = new Country("USA", "US");
-        return country;
+        return new Country("USA", "US");
     }
 }

@@ -35,7 +35,7 @@ import java.util.Map;
 @TestConfiguration
 public class FlightBuilder {
 
-    private static Map<String, Country> countriesMap = new HashMap<>();
+    private static final Map<String, Country> countriesMap = new HashMap<>();
 
     static {
         countriesMap.put("AU", new Country("Australia", "AU"));
@@ -47,18 +47,17 @@ public class FlightBuilder {
     Flight buildFlightFromCsv() throws IOException {
         Flight flight = new Flight("AA1234", 20);
         try (BufferedReader reader = new BufferedReader(new FileReader("src/test/resources/flights_information.csv"))) {
-            String line = null;
+            String line;
             do {
                 line = reader.readLine();
                 if (line != null) {
-                    String[] passengerString = line.toString().split(";");
+                    String[] passengerString = line.split(";");
                     Passenger passenger = new Passenger(passengerString[0].trim());
                     passenger.setCountry(countriesMap.get(passengerString[1].trim()));
                     passenger.setIsRegistered(false);
                     flight.addPassenger(passenger);
                 }
             } while (line != null);
-
         }
 
         return flight;

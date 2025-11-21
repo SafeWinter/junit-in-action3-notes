@@ -27,7 +27,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.ie.InternetExplorerDriver;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -38,7 +37,7 @@ public class LoginTest {
     private WebDriver webDriver;
 
     public static Collection<WebDriver> getBrowserVersions() {
-        return Arrays.asList(new WebDriver[]{new FirefoxDriver(), new ChromeDriver(), new InternetExplorerDriver()});
+        return Arrays.asList(new WebDriver[]{new FirefoxDriver(), new ChromeDriver()});
     }
 
     @ParameterizedTest
@@ -46,8 +45,7 @@ public class LoginTest {
     public void loginWithValidCredentials(WebDriver webDriver) {
         this.webDriver = webDriver;
         homepage = new Homepage(webDriver);
-        homepage
-                .openFormAuthentication()
+        homepage.openFormAuthentication()
                 .loginWith("tomsmith", "SuperSecretPassword!")
                 .thenLoginSuccessful();
     }
@@ -57,8 +55,7 @@ public class LoginTest {
     public void loginWithInvalidCredentials(WebDriver webDriver) {
         this.webDriver = webDriver;
         homepage = new Homepage(webDriver);
-        homepage
-                .openFormAuthentication()
+        homepage.openFormAuthentication()
                 .loginWith("tomsmith", "SuperSecretPassword")
                 .thenLoginUnsuccessful();
     }

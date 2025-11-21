@@ -17,13 +17,15 @@
 
 package com.manning.junitbook.ch15.htmlunit;
 
-import java.io.IOException;
-import java.net.URL;
-
-import com.gargoylesoftware.htmlunit.MockWebConnection;
-import com.gargoylesoftware.htmlunit.WebAssert;
-import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import org.htmlunit.MockWebConnection;
+import org.htmlunit.WebAssert;
+import org.htmlunit.html.HtmlPage;
 import org.junit.jupiter.api.Test;
+
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 
 /**
  * Demonstrates using in-line HTML fixtures in test methods.
@@ -42,10 +44,10 @@ public class InLineHtmlFixtureTest extends ManagedWebClient {
     }
 
     @Test
-    public void testInLineHtmlFixtures() throws IOException {
-        final URL page1Url = new URL("http://Page1/");
-        final URL page2Url = new URL("http://Page2/");
-        final URL page3Url = new URL("http://Page3/");
+    public void testInLineHtmlFixtures() throws IOException, URISyntaxException {
+        final URL page1Url = new URI("http://Page1/").toURL();
+        final URL page2Url = new URI("http://Page2/").toURL();
+        final URL page3Url = new URI("http://Page3/").toURL();
 
         MockWebConnection connection = new MockWebConnection();
         connection.setResponse(page1Url, "<html><head><title>Hello 1!</title></head></html>");

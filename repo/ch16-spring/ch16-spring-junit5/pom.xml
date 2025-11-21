@@ -22,7 +22,7 @@
         </plugins>
     </build>
 
-    <name>spring</name>
+    <name>spring_junit5</name>
     <url>http://maven.apache.org</url>
     <dependencies>
 

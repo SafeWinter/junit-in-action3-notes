@@ -20,18 +20,17 @@
  */
 package com.manning.junitbook.ch15.htmlunit;
 
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collection;
-
-import com.gargoylesoftware.htmlunit.WebAssert;
+import org.htmlunit.BrowserVersion;
+import org.htmlunit.WebAssert;
+import org.htmlunit.WebClient;
+import org.htmlunit.html.HtmlListItem;
+import org.htmlunit.html.HtmlPage;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import com.gargoylesoftware.htmlunit.html.HtmlListItem;
-import com.gargoylesoftware.htmlunit.BrowserVersion;
-import com.gargoylesoftware.htmlunit.WebClient;
-import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collection;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -41,21 +40,27 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class JavadocPageAllBrowserTest {
 
     private static Collection<BrowserVersion[]> getBrowserVersions() {
-        return Arrays.asList(new BrowserVersion[][]{{BrowserVersion.FIREFOX_60},
-                {BrowserVersion.INTERNET_EXPLORER}, {BrowserVersion.CHROME},
-                {BrowserVersion.BEST_SUPPORTED}});
+        return Arrays.asList(new BrowserVersion[][]{
+                {BrowserVersion.FIREFOX},
+                {BrowserVersion.EDGE},
+                {BrowserVersion.CHROME},
+                {BrowserVersion.BEST_SUPPORTED}
+        });
     }
 
     @ParameterizedTest
     @MethodSource("getBrowserVersions")
     public void testClassNav(BrowserVersion browserVersion) throws IOException {
         WebClient webClient = new WebClient(browserVersion);
+        webClient.getOptions().setJavaScriptEnabled(false);
 
-        HtmlPage mainPage = (HtmlPage) webClient.getPage("http://htmlunit.sourceforge.net/apidocs/index.html");
+        HtmlPage mainPage = (HtmlPage) webClient.getPage("https://htmlunit.sourceforge.io/apidocs/index.html");
         WebAssert.notNull("Missing main page", mainPage);
+
         HtmlPage packagePage = (HtmlPage) mainPage.getFrameByName("packageFrame").getEnclosedPage();
         WebAssert.notNull("Missing package page", packagePage);
+
         HtmlListItem htmlListItem = (HtmlListItem) packagePage.getElementsByTagName("li").item(0);
-        assertEquals("AboutURLConnection", htmlListItem.getTextContent());
+        assertEquals("AbortController", htmlListItem.getTextContent());
     }
 }

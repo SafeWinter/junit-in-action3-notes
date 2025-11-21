@@ -21,8 +21,8 @@
 package com.manning.junitbook.spring;
 
 public class Country {
-    private String name;
-    private String codeName;
+    private final String name;
+    private final String codeName;
 
     public Country(String name, String codeName) {
         this.name = name;

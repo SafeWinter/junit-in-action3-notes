@@ -32,11 +32,10 @@ public class ExecutionContextExtension implements ExecutionCondition {
     @Override
     public ConditionEvaluationResult evaluateExecutionCondition(ExtensionContext context) {
         Properties properties = new Properties();
-        String executionContext = "";
+        String executionContext;
 
         try {
-            properties.load(ExecutionContextExtension.class.getClassLoader()
-                    .getResourceAsStream("context.properties"));
+            properties.load(getClass().getClassLoader().getResourceAsStream("context.properties"));
             executionContext = properties.getProperty("context");
             if (!"regular".equalsIgnoreCase(executionContext) && !"low".equalsIgnoreCase(executionContext)) {
                 return ConditionEvaluationResult.disabled("Test disabled outside regular and low contexts");

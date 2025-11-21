@@ -17,17 +17,21 @@
 
 package com.manning.junitbook.ch15.htmlunit;
 
+import org.htmlunit.CollectingAlertHandler;
+import org.htmlunit.FailingHttpStatusCodeException;
+import org.htmlunit.MockWebConnection;
+import org.htmlunit.WebAssert;
+import org.htmlunit.html.HtmlPage;
+import org.junit.jupiter.api.Test;
+
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.gargoylesoftware.htmlunit.*;
-import com.gargoylesoftware.htmlunit.html.HtmlPage;
-import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Demonstrates testing a confirmation handler.
@@ -35,11 +39,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class WindowConfirmTest extends ManagedWebClient {
 
     @Test
-    public void testWindowConfirm() throws FailingHttpStatusCodeException, IOException {
+    public void testWindowConfirm() throws FailingHttpStatusCodeException, IOException, URISyntaxException {
         String html = "<html><head><title>Hello</title></head><body onload='confirm(\"Confirm Message\")'></body></html>";
-        URL testUrl = new URL("http://Page1/");
+        URL testUrl = new URI("http://Page1/").toURL();
         MockWebConnection mockConnection = new MockWebConnection();
-        final List<String> confirmMessages = new ArrayList<String>();
+        final List<String> confirmMessages = new ArrayList<>();
         // set up
         webClient.setConfirmHandler((page, message) -> {
             confirmMessages.add(message);
@@ -54,12 +58,15 @@ public class WindowConfirmTest extends ManagedWebClient {
     }
 
     @Test
-    public void testWindowConfirmAndAlert() throws FailingHttpStatusCodeException, IOException {
-        String html = "<html><head><title>Hello</title><script>function go(){alert(confirm('Confirm Message'))}</script>\n"
+    public void testWindowConfirmAndAlert() throws FailingHttpStatusCodeException, IOException, URISyntaxException {
+        String html = "<html><head><title>Hello</title>" +
+                "<script>function go(){" +
+                  "alert(confirm('Confirm Message'))" +
+                "}</script>\n"
                 + "</head><body onload='go()'></body></html>";
-        URL testUrl = new URL("http://Page1/");
+        URL testUrl = new URI("http://Page1/").toURL();
         MockWebConnection mockConnection = new MockWebConnection();
-        final List<String> confirmMessages = new ArrayList<String>();
+        final List<String> confirmMessages = new ArrayList<>();
         // set up
         webClient.setAlertHandler(new CollectingAlertHandler());
         webClient.setConfirmHandler((page, message) -> {

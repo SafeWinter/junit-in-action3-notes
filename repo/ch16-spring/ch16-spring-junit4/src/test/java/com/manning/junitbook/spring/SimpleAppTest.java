@@ -20,7 +20,8 @@
  */
 package com.manning.junitbook.spring;
 
-import org.junit.*;
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import static com.manning.junitbook.spring.PassengerUtil.getExpectedPassenger;
@@ -43,10 +44,8 @@ public class SimpleAppTest {
 
     @Test
     public void testInitPassenger() {
-        Passenger passenger = (Passenger) context.getBean("passenger");
+        Passenger passenger = context.getBean("passenger", Passenger.class);
         assertEquals(expectedPassenger, passenger);
         System.out.println(passenger);
     }
-
-
 }

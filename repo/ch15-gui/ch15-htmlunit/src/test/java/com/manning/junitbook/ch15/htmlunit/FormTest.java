@@ -17,21 +17,20 @@
 
 package com.manning.junitbook.ch15.htmlunit;
 
+import org.htmlunit.CollectingAlertHandler;
+import org.htmlunit.WebAssert;
+import org.htmlunit.html.HtmlForm;
+import org.htmlunit.html.HtmlPage;
+import org.htmlunit.html.HtmlSubmitInput;
+import org.htmlunit.html.HtmlTextInput;
+import org.junit.jupiter.api.Test;
+
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
-import com.gargoylesoftware.htmlunit.AlertHandler;
-import com.gargoylesoftware.htmlunit.CollectingAlertHandler;
-import com.gargoylesoftware.htmlunit.Page;
-import com.gargoylesoftware.htmlunit.WebAssert;
-import com.gargoylesoftware.htmlunit.html.HtmlForm;
-import com.gargoylesoftware.htmlunit.html.HtmlPage;
-import com.gargoylesoftware.htmlunit.html.HtmlSubmitInput;
-import com.gargoylesoftware.htmlunit.html.HtmlTextInput;
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Demonstrates testing a form.
@@ -59,9 +58,10 @@ public class FormTest extends ManagedWebClient {
         HtmlPage page = webClient.getPage("file:src/main/webapp/formtest.html");
         HtmlForm form = page.getFormByName("validated_form");
         HtmlSubmitInput submitButton = form.getInputByName("submit");
+
         HtmlPage resultPage = submitButton.click();
         WebAssert.assertTitleEquals(resultPage, page.getTitleText());
-        WebAssert.assertTextPresent(resultPage, page.asText());
+        WebAssert.assertTextPresent(resultPage, page.asNormalizedText());
 
         List<String> collectedAlerts = alertHandler.getCollectedAlerts();
         List<String> expectedAlerts = Collections.singletonList("Please enter a value.");
@@ -75,9 +75,11 @@ public class FormTest extends ManagedWebClient {
         HtmlPage page = webClient.getPage("file:src/main/webapp/formtest.html");
         HtmlForm form = page.getFormByName("validated_form");
         HtmlTextInput input = form.getInputByName("in_text");
+
         input.setValueAttribute("typing...");
         HtmlSubmitInput submitButton = form.getInputByName("submit");
         HtmlPage resultPage = submitButton.click();
+
         WebAssert.assertTitleEquals(resultPage, "Result");
         assertTrue(alertHandler.getCollectedAlerts().isEmpty(), "No alerts expected");
     }

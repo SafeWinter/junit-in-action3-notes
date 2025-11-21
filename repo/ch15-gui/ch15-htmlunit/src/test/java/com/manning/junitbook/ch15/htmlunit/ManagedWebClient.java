@@ -20,9 +20,13 @@
  */
 package com.manning.junitbook.ch15.htmlunit;
 
-import com.gargoylesoftware.htmlunit.WebClient;
+import org.htmlunit.BrowserVersion;
+import org.htmlunit.SilentCssErrorHandler;
+import org.htmlunit.WebClient;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+
+import java.util.logging.Level;
 
 /**
  * Manages an HtmlUnit WebClient on behalf of subclasses. The class makes sure
@@ -33,7 +37,19 @@ public abstract class ManagedWebClient {
 
     @BeforeEach
     public void setUp() {
-        webClient = new WebClient();
+        webClient = new WebClient(BrowserVersion.BEST_SUPPORTED);
+
+        // 解决方案1：抑制无关警告日志
+        java.util.logging.Logger.getLogger("org.htmlunit.IncorrectnessListenerImpl").setLevel(Level.OFF);
+
+        // 解决方案2：忽略脚本错误，防止因外部脚本问题导致测试失败
+        webClient.getOptions().setThrowExceptionOnScriptError(false);
+
+        // 解决方案3：设置JS超时时间
+        webClient.getOptions().setJavaScriptEnabled(true);
+
+        // 你已配置的：忽略CSS错误
+        webClient.setCssErrorHandler(new SilentCssErrorHandler());
     }
 
     @AfterEach

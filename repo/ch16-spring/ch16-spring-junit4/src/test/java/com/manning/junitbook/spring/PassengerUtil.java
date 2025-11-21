@@ -20,6 +20,10 @@
  */
 package com.manning.junitbook.spring;
 
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+import java.util.Objects;
+
 public class PassengerUtil {
 
     public static Passenger getExpectedPassenger() {
@@ -29,5 +33,17 @@ public class PassengerUtil {
         passenger.setCountry(country);
 
         return passenger;
+    }
+
+    public static Passenger getActualPassenger() {
+        ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext(
+                "classpath:application-context.xml");
+        return context.getBean("passenger", Passenger.class);
+    }
+
+    public static void main(String[] args) {
+        Passenger expected = getExpectedPassenger();
+        Passenger actual = getActualPassenger();
+        System.out.println(Objects.equals(expected, actual));
     }
 }

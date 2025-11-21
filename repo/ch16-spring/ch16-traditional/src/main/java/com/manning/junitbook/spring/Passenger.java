@@ -21,8 +21,8 @@
 package com.manning.junitbook.spring;
 
 public class Passenger {
-    private String name;
-    private Country country;
+    private final String name;
+    private final Country country;
 
     public Passenger(String name) {
         this.name = name;

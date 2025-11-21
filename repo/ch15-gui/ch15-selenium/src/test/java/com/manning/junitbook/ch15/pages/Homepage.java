@@ -25,7 +25,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
 public class Homepage {
-    private WebDriver webDriver;
+    private final WebDriver webDriver;
 
     public Homepage(WebDriver webDriver) {
         this.webDriver = webDriver;
@@ -33,7 +33,7 @@ public class Homepage {
 
     public LoginPage openFormAuthentication() {
         webDriver.get("https://the-internet.herokuapp.com/");
-        webDriver.findElement(By.cssSelector("[href=\"/login\"]")).click();
+        webDriver.findElement(By.linkText("Form Authentication")).click();
         return new LoginPage(webDriver);
     }
 }

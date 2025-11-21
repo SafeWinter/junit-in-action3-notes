@@ -29,7 +29,7 @@ import java.sql.SQLException;
 
 public class PassengerDaoImpl implements PassengerDao {
 
-    private Connection connection;
+    private final Connection connection;
 
     public PassengerDaoImpl(Connection connection) {
         this.connection = connection;
