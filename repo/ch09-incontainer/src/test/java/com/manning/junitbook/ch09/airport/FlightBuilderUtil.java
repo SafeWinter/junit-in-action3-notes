@@ -29,11 +29,11 @@ public class FlightBuilderUtil {
     public static Flight buildFlightFromCsv() throws IOException {
         Flight flight = new Flight("AA1234", 20);
         try (BufferedReader reader = new BufferedReader(new FileReader("src/test/resources/flights_information.csv"))) {
-            String line = null;
+            String line;
             do {
                 line = reader.readLine();
                 if (line != null) {
-                    String[] passengerString = line.toString().split(";");
+                    String[] passengerString = line.split(";");
                     Passenger passenger = new Passenger(passengerString[0].trim(), passengerString[1].trim());
                     flight.addPassenger(passenger);
                 }

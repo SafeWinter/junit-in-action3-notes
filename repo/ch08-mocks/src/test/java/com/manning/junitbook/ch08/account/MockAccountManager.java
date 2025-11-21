@@ -30,13 +30,13 @@ public class MockAccountManager implements AccountManager {
     /**
      * A Map to hold all the <userId, account> values.
      */
-    private Map<String, Account> accounts = new HashMap<String, Account>();
+    private final Map<String, Account> accounts = new HashMap<>();
 
     /**
      * A method to add an account to the manager.
      *
-     * @param userId
-     * @param account
+     * @param userId userId
+     * @param account account
      */
     public void addAccount(String userId, Account account) {
         this.accounts.put(userId, account);

@@ -28,7 +28,7 @@ public class MockConfiguration implements Configuration {
     /**
      * Sets the sql query.
      *
-     * @param sqlString
+     * @param sqlString sqlString
      */
     public void setSQL(String sqlString) {
     }
@@ -36,8 +36,8 @@ public class MockConfiguration implements Configuration {
     /**
      * Gets the sql query.
      *
-     * @param sqlString
-     * @return
+     * @param sqlString sqlString
+     * @return result string
      */
     public String getSQL(String sqlString) {
         return null;

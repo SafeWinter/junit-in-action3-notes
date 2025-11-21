@@ -23,8 +23,8 @@ package com.testeddatasystems.flights;
 
 public class Passenger {
 
-    private String identifier;
-    private String name;
+    private final String identifier;
+    private final String name;
 
     public Passenger(String identifier, String name) {
         this.identifier = identifier;

@@ -22,8 +22,6 @@ package com.manning.junitbook.ch08.account;
 
 import com.manning.junitbook.ch08.configurations.Configuration;
 import org.apache.commons.logging.Log;
-import org.jmock.Expectations;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;

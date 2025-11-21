@@ -34,7 +34,7 @@ public class MockConnectionFactory implements ConnectionFactory {
     /**
      * Set the input stream.
      *
-     * @param stream
+     * @param stream the input stream instance to set
      */
     public void setData(InputStream stream) {
         this.inputStream = stream;
@@ -42,11 +42,8 @@ public class MockConnectionFactory implements ConnectionFactory {
 
     /**
      * Get the input stream.
-     *
-     * @throws Exception
      */
-    public InputStream getData() //throws Exception
-    {
+    public InputStream getData() {
         return inputStream;
     }
 }

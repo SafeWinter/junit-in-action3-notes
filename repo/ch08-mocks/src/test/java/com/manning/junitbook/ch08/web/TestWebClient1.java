@@ -31,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  */
 public class TestWebClient1 {
     @Test
-    public void testGetContentOk() throws Exception {
+    public void testGetContentOk() {
         MockConnectionFactory mockConnectionFactory =
                 new MockConnectionFactory();
 

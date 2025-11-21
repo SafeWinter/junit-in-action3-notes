@@ -32,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  */
 public class TestAccountService {
     @Test
-    public void testTransferOk() {
+    void testTransferOk() {
         Account senderAccount = new Account("1", 200);
         Account beneficiaryAccount = new Account("2", 100);
 

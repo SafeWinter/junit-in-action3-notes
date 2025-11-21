@@ -27,7 +27,7 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * A test-case to test the WebClient class
@@ -35,8 +35,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  */
 public class TestWebClientMock {
     @Test
-    public void testGetContentOk()
-            throws Exception {
+    public void testGetContentOk() throws Exception {
         MockHttpURLConnection mockConnection = new MockHttpURLConnection();
         mockConnection.setExpectedInputStream(new ByteArrayInputStream("It works".getBytes()));
 
@@ -48,12 +47,25 @@ public class TestWebClientMock {
         assertEquals("It works", result);
     }
 
+    @Test
+    public void testGetContentEx() throws Exception {
+
+        MockHttpURLConnection mockConnection = new MockHttpURLConnection();
+        mockConnection.setExpectedInputStream(new ByteArrayInputStream("It works".getBytes()));
+
+        TestableWebClient1 client = new TestableWebClient1();
+        client.setHttpURLConnection(mockConnection);
+
+        String result = client.getContent(new URL("http://localhost"));
+
+        assertNull(result);
+    }
+
     /**
      * An inner, private class that extends WebClient and allows us
      * to override the createHttpURLConnection method.
      */
-    private class TestableWebClient
-            extends WebClient1 {
+    private static class TestableWebClient extends WebClient1 {
         /**
          * The connection.
          */
@@ -62,7 +74,6 @@ public class TestWebClientMock {
         /**
          * Setter method for the HttpURLConnection.
          *
-         * @param connection
          */
         public void setHttpURLConnection(HttpURLConnection connection) {
             this.connection = connection;
@@ -71,9 +82,22 @@ public class TestWebClientMock {
         /**
          * A method that we overwrite to create the URL connection.
          */
-        public HttpURLConnection createHttpURLConnection(URL url)
-                throws IOException {
+        @Override
+        public HttpURLConnection createHttpURLConnection(URL url) {
             return this.connection;
+        }
+    }
+
+
+    private static class TestableWebClient1 extends WebClient1 {
+        private HttpURLConnection connection;
+        public void setHttpURLConnection(HttpURLConnection connection) {
+            this.connection = connection;
+        }
+        @Override
+        public HttpURLConnection createHttpURLConnection(URL url) throws IOException {
+            this.connection.setRequestMethod("POST");
+            throw new IOException();
         }
     }
 }

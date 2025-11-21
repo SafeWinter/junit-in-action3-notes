@@ -30,7 +30,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import javax.inject.Inject;
-import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
 
@@ -48,13 +47,13 @@ public class FlightWithPassengersTest {
     Flight flight;
 
     @Test(expected = RuntimeException.class)
-    public void testNumberOfSeatsCannotBeExceeded() throws IOException {
+    public void testNumberOfSeatsCannotBeExceeded() {
         assertEquals(20, flight.getNumberOfPassengers());
         flight.addPassenger(new Passenger("1247890", "Michael Johnson"));
     }
 
     @Test
-    public void testAddRemovePassengers() throws IOException {
+    public void testAddRemovePassengers() {
         flight.setSeats(21);
         Passenger additionalPassenger = new Passenger("1247890", "Michael Johnson");
         flight.addPassenger(additionalPassenger);

@@ -52,19 +52,19 @@ public class TestWebClientJMock
         ConnectionFactory factory = context.mock( ConnectionFactory.class );
         InputStream mockStream = context.mock( InputStream.class );
 
-        context.checking( new Expectations()
+        context.checking(new Expectations()
         {
             {
                 oneOf( factory ).getData();
                 will( returnValue( mockStream ) );
 
                 atLeast(1).of(mockStream).read();
-                will( onConsecutiveCalls( returnValue( Integer.valueOf( (byte) 'W' ) ),
-                                          returnValue( Integer.valueOf( (byte) 'o' ) ),
-                                          returnValue( Integer.valueOf( (byte) 'r' ) ),
-                                          returnValue( Integer.valueOf( (byte) 'k' ) ),
-                                          returnValue( Integer.valueOf( (byte) 's' ) ),
-                                          returnValue( Integer.valueOf( (byte) '!' ) ),
+                will( onConsecutiveCalls( returnValue((int) (byte) 'W'),
+                                          returnValue((int) (byte) 'o'),
+                                          returnValue((int) (byte) 'r'),
+                                          returnValue((int) (byte) 'k'),
+                                          returnValue((int) (byte) 's'),
+                                          returnValue((int) (byte) '!'),
                                           returnValue( -1 ) ) );
 
                 oneOf( mockStream ).close();
@@ -86,7 +86,7 @@ public class TestWebClientJMock
         ConnectionFactory factory = context.mock( ConnectionFactory.class );
         InputStream mockStream = context.mock( InputStream.class );
 
-        context.checking( new Expectations()
+        context.checking(new Expectations()
         {
             {
                 oneOf( factory ).getData();

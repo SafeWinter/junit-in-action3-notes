@@ -45,7 +45,7 @@ public class MockHttpURLConnection
     /**
      * Constructor that accepts the URL of the connection as a parameter.
      *
-     * @param url
+     * @param url the url instance
      */
     protected MockHttpURLConnection(URL url) {
         super(url);
@@ -54,7 +54,7 @@ public class MockHttpURLConnection
     /**
      * Setup the input stream expectation.
      *
-     * @param stream
+     * @param stream the input stream instance
      */
     public void setExpectedInputStream(InputStream stream) {
         this.stream = stream;
@@ -63,8 +63,8 @@ public class MockHttpURLConnection
     /**
      * Return the input stream
      *
-     * @return
-     * @throws IOException
+     * @return the input stream retrieved
+     * @throws IOException the exception instance this method possibly would throw
      */
     public InputStream getInputStream()
             throws IOException {
@@ -80,7 +80,7 @@ public class MockHttpURLConnection
     /**
      * Connect the connection.
      *
-     * @throws IOException
+     * @throws IOException the exception instance this method possibly would throw
      */
     public void connect()
             throws IOException {
@@ -89,7 +89,7 @@ public class MockHttpURLConnection
     /**
      * Are we using a proxy?
      *
-     * @return
+     * @return the proxy detection result
      */
     public boolean usingProxy() {
         return false;

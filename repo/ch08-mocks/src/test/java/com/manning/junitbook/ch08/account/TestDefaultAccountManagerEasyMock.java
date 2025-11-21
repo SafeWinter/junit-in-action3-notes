@@ -30,7 +30,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
- * This is a test-case for the DefualtAccountManager class.
+ * This is a test-case for the DefaultAccountManager class.
  * We use here the EasyMock library to mock the logger and the
  * configuration classes.
  */
