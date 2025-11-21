@@ -490,7 +490,11 @@ public class CucumberTest {
 >
 > **实战备忘**
 >
-> 实测过程中，这两个插件与我之前安装了另一个插件 `MyBatisX` 冲突了，导致 `Gherkin` 插件无法正常解析特征文件 `passenger_policy.feature`。此时应按提示禁用 `MyBatisX` 插件即可。
+> 实测过程中，这两个插件与我之前安装了另一个插件 `MyBatisX` 冲突了，导致 `Gherkin` 插件无法正常解析特征文件 `passenger_policy.feature`：
+>
+> ![](../assets/21.14.png)
+>
+> 此时应按提示禁用 `MyBatisX` 插件并重启 `IDEA` 即可。
 
 为了进一步演示 `Cucumber` 对 `BDD` 的强大支持，作者又展示了带表格的场景大纲的用法，让人耳目一新。
 
